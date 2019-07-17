@@ -2,13 +2,20 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\Relations\HasMany\Commissions as HasManyCommissions;
+use App\Traits\Relations\HasMany\Payouts as HasManyPayouts;
+use App\Traits\Relations\HasMany\Shops as HasManyShops;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable,
+        HasApiTokens,
+        HasManyShops,
+        HasManyCommissions,
+        HasManyPayouts;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +23,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'username',
+        'password',
+        'paypal_email',
+        'user_type',
     ];
 
     /**
@@ -36,4 +48,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isSuperAdmin()
+    {
+        return in_array($this->user_type, ['super']);
+    }
+
+    public function isAdmin()
+    {
+        return in_array($this->user_type, ['admin', 'super']);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canImpersonate()
+    {
+        return $this->isAdmin();
+    }
+
+    /**
+     * @return bool
+     */
+    public function canBeImpersonated()
+    {
+        return !$this->isSuperAdmin() && $this->id !== request()->user()->id;
+    }
 }
