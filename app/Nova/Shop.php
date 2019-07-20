@@ -127,6 +127,7 @@ class Shop extends Resource
     public function filters(Request $request)
     {
         return [
+            new \App\Nova\Filters\App(),
         ];
     }
 

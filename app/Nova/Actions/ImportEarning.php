@@ -44,8 +44,9 @@ class ImportEarnings extends Action
     public function fields()
     {
         return [
-            File::make('File')
-                ->rules('required'),
+            File::make('CSV File', 'file')
+                ->rules('required')
+                ->help('Note: Import only csv file generated from Shopify Partners -> Payout -> Export payouts as CSV'),
         ];
     }
 }

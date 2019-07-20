@@ -28,7 +28,7 @@ class Payout extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'title';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -66,6 +66,10 @@ class Payout extends Resource
     {
         return [
             ID::make()->sortable(),
+
+            Text::make('Title')
+                ->help('A title to make sense of what this Payout is for.')
+                ->rules('required', 'max:254'),
 
             BelongsTo::make('User', 'user', User::class),
 

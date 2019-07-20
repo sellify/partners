@@ -2,6 +2,8 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\PayCommission;
+use App\Nova\Filters\PaidOrUnpaid;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
@@ -42,7 +44,7 @@ class Commission extends Resource
     public static $search = [
         'id',
         'amount',
-        'paid',
+        'paid_at',
     ];
 
     /**
@@ -117,6 +119,8 @@ class Commission extends Resource
     public function filters(Request $request)
     {
         return [
+            new PaidOrUnpaid(),
+            new \App\Nova\Filters\App(),
         ];
     }
 
@@ -139,7 +143,20 @@ class Commission extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new PayCommission())->canSee(function ($request) {
+                if ($request->user()->isAdmin()) {
+                    $model = $request->findModelQuery()->first();
+
+                    return !($model ? $model->paid_at : false);
+                }
+
+                return false;
+            })
+            ->canRun(function ($request, $model) {
+                return $request->user()->isAdmin() & $model && !$model->paid_at;
+            }),
+        ];
     }
 
     /**

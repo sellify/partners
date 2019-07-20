@@ -8,10 +8,11 @@ use App\Traits\Relations\BelongsTo\App as BelongsToApp;
 use App\Traits\Relations\BelongsTo\Shop as BelongsToShop;
 use App\Traits\Relations\BelongsTo\Payout as BelongsToPayout;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Nova\Actions\Actionable;
 
 class Commission extends Model
 {
-    use BelongsToUser, BelongsToEarning, BelongsToApp, BelongsToShop, BelongsToPayout;
+    use Actionable, BelongsToUser, BelongsToEarning, BelongsToApp, BelongsToShop, BelongsToPayout;
 
     protected $guarded = [
       'earning_id',

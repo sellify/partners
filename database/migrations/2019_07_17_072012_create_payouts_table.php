@@ -15,6 +15,7 @@ class CreatePayoutsTable extends Migration
     {
         Schema::create('payouts', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('title');
             $table->bigInteger('user_id');
             $table->integer('amount');
             $table->string('payment_method');

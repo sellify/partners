@@ -44,6 +44,7 @@ class Earning extends Resource
     public static $search = [
         'id',
         'charge_type',
+        'amount',
         'category',
         'theme_name',
     ];
@@ -138,6 +139,7 @@ class Earning extends Resource
     public function filters(Request $request)
     {
         return [
+            new \App\Nova\Filters\App(),
         ];
     }
 
