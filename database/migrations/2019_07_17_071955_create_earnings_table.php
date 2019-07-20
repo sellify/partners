@@ -22,9 +22,9 @@ class CreateEarningsTable extends Migration
             $table->string('charge_type');
             $table->string('category');
             $table->string('theme_name')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->date('payout_date')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
+            $table->timestamp('payout_date')->nullable();
             $table->timestamps();
         });
     }

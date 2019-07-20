@@ -3,8 +3,8 @@
 namespace App\Nova;
 
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Number;
@@ -14,6 +14,8 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Payout extends Resource
 {
+    use ResourceCommon;
+
     /**
      * The model the resource corresponds to.
      *
@@ -27,6 +29,13 @@ class Payout extends Resource
      * @var string
      */
     public static $title = 'id';
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $subtitle = 'transaction_id';
 
     /**
      * The columns that should be searched.
@@ -79,8 +88,8 @@ class Payout extends Resource
             Text::make('Transaction ID')
                 ->rules('required', 'max:255'),
 
-            Date::make('Payout At')
-                ->format('MMM, DD YYYY')
+            DateTime::make('Payout At')
+                ->format('MMM, DD YYYY hh:mm A')
                 ->rules('required'),
 
             Textarea::make('Notes')
@@ -98,6 +107,8 @@ class Payout extends Resource
                     ->hideFromIndex()
                     ->hideWhenCreating()
                     ->hideWhenUpdating(),
+
+            HasMany::make('Commissions'),
         ];
     }
 

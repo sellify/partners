@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\App;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
@@ -13,6 +12,8 @@ use Laravel\Nova\Fields\Text;
 
 class Email extends Resource
 {
+    use ResourceCommon;
+
     /**
      * The model the resource corresponds to.
      *
@@ -28,6 +29,13 @@ class Email extends Resource
     public static $title = 'subject';
 
     /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $subtitle = 'event';
+
+    /**
      * The columns that should be searched.
      *
      * @var array
@@ -38,6 +46,13 @@ class Email extends Resource
         'event',
         'content',
     ];
+
+    /**
+     * Indicates if the resoruce should be globally searchable.
+     *
+     * @var bool
+     */
+    public static $globallySearchable = true;
 
     /**
      * Get the fields displayed by the resource.

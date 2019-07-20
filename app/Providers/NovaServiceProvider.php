@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Anaseqal\NovaImport\NovaImport;
 use App\Nova\App;
 use Laravel\Nova\Nova;
 use Illuminate\Support\Facades\Gate;
@@ -63,7 +64,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function tools()
     {
-        return [];
+        return [
+            new NovaImport(),
+        ];
     }
 
     /**

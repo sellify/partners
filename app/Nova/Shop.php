@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -46,6 +47,13 @@ class Shop extends Resource
     ];
 
     /**
+     * Indicates if the resoruce should be globally searchable.
+     *
+     * @var bool
+     */
+    public static $globallySearchable = true;
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -71,28 +79,30 @@ class Shop extends Resource
                     }
                 }),
 
-            BelongsTo::make('App', 'app', \App\Nova\App::class)
-                     ->sortable(),
+            BelongsTo::make('App', 'app', \App\Nova\App::class),
 
-            BelongsTo::make('Referrer', 'user', User::class)
-                     ->sortable(),
+            BelongsTo::make('Referrer', 'user', User::class),
 
             DateTime::make('Last Charge At')
                     ->format('MMM, DD YYYY hh:mm A')
                     ->sortable()
+                ->hideFromIndex()
                     ->hideWhenUpdating()
                     ->hideWhenCreating(),
 
             DateTime::make('Created At')
                     ->format('MMM, DD YYYY hh:mm A')
                     ->hideWhenUpdating()
-                    ->hideWhenCreating(),
+                    ->hideWhenCreating()
+            ->sortable(),
 
             DateTime::make('Updated At')
                     ->format('MMM, DD YYYY hh:mm A')
                     ->hideFromIndex()
                     ->hideWhenCreating()
                     ->hideWhenUpdating(),
+
+            HasMany::make('Earnings'),
         ];
     }
 

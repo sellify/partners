@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Earning;
+use App\Commission;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -20,9 +20,9 @@ class CommissionPolicy
         //
     }
 
-    public function create(User $user)
+    public function view(User $user, Commission $resource)
     {
-        return false;
+        return $user->isAdmin() || $resource->user_id === $user->id;
     }
 
     public function viewAny(User $user)
@@ -30,12 +30,27 @@ class CommissionPolicy
         return true;
     }
 
-    public function view(User $user, Earning $earning)
+    public function create(User $user)
     {
-        return $user->isAdmin();
+        return $user->isSuperAdmin();
     }
 
-    public function delete(User $user, Earning $earning)
+    public function update(User $user, Commission $resource)
+    {
+        return $user->isSuperAdmin() && !$resource->paid;
+    }
+
+    public function delete(User $user, Commission $resource)
+    {
+        return $user->isSuperAdmin();
+    }
+
+    public function restore(User $user, Commission $resource)
+    {
+        return $user->isSuperAdmin();
+    }
+
+    public function forceDelete(User $user, Commission $resource)
     {
         return false;
     }

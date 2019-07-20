@@ -16,6 +16,8 @@ use KABBOUCHI\NovaImpersonate\Impersonate;
 
 class User extends Resource
 {
+    use ResourceCommon;
+
     /**
      * The logical group associated with the resource.
      *
@@ -38,6 +40,13 @@ class User extends Resource
     public static $title = 'username';
 
     /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $subtitle = 'email';
+
+    /**
      * The columns that should be searched.
      *
      * @var array
@@ -50,6 +59,13 @@ class User extends Resource
         'paypal_email',
         'user_type',
     ];
+
+    /**
+     * Indicates if the resoruce should be globally searchable.
+     *
+     * @var bool
+     */
+    public static $globallySearchable = true;
 
     /**
      * Get the fields displayed by the resource.
@@ -108,10 +124,12 @@ class User extends Resource
                   ->max(100)
                   ->min(0)
                     ->withMeta([
-                        'value'           => $this->commission ?? \App\Setting::value('commission'),
                         'extraAttributes' => [
                             'placeholder' => 'Example: 10',
                         ],
+                        $this->viewIs('form', $request) ? [
+                            'value' => $this->commission ?? \App\Setting::value('commission'),
+                        ] : [],
                     ])
                   ->displayUsing(function ($commission) {
                       return $commission . '%';

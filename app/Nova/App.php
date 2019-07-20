@@ -11,6 +11,8 @@ use Laravel\Nova\Fields\Text;
 
 class App extends Resource
 {
+    use ResourceCommon;
+
     /**
      * The model the resource corresponds to.
      *
@@ -26,6 +28,13 @@ class App extends Resource
     public static $title = 'name';
 
     /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $subtitle = 'appstore_url';
+
+    /**
      * The columns that should be searched.
      *
      * @var array
@@ -38,6 +47,13 @@ class App extends Resource
         'appstore_url',
         'price',
     ];
+
+    /**
+     * Indicates if the resoruce should be globally searchable.
+     *
+     * @var bool
+     */
+    public static $globallySearchable = true;
 
     /**
      * Get the fields displayed by the resource.
@@ -123,6 +139,12 @@ class App extends Resource
         ];
 
         $fields[] = HasMany::make('Shops', 'shops', '\App\Nova\Shop');
+
+        if ($request->user()->isAdmin()) {
+            $fields[] = HasMany::make('Earnings', 'earnings', '\App\Nova\Earning');
+        }
+
+        $fields[] = HasMany::make('Commissions', 'commissions', '\App\Nova\Commission');
 
         return $fields;
     }

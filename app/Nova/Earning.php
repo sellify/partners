@@ -2,17 +2,19 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\App;
+use App\Nova\Actions\ImportEarnings;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 
 class Earning extends Resource
 {
+    use ResourceCommon;
+
     /**
      * The model the resource corresponds to.
      *
@@ -25,7 +27,14 @@ class Earning extends Resource
      *
      * @var string
      */
-    public static $title = 'shopify_domain';
+    public static $title = 'id';
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $subtitle = 'app.name';
 
     /**
      * The columns that should be searched.
@@ -44,7 +53,7 @@ class Earning extends Resource
      *
      * @var bool
      */
-    public static $globallySearchable = false;
+    public static $globallySearchable = true;
 
     /**
      * Get the fields displayed by the resource.
@@ -80,16 +89,17 @@ class Earning extends Resource
                 ->sortable()
                 ->hideFromIndex(),
 
-            Date::make('Start Date')
+            DateTime::make('Start Date')
                 ->format('MMM, DD YYYY')
                 ->hideFromIndex(),
 
-            Date::make('End Date')
+            DateTime::make('End Date')
                 ->format('MMM, DD YYYY')
                 ->hideFromIndex(),
 
-            Date::make('Payout Date')
-                ->format('MMM, DD YYYY'),
+            DateTime::make('Payout Date')
+                ->format('MMM, DD YYYY')
+            ->sortable(),
 
             DateTime::make('Charge Created At')
                     ->format('MMM, DD YYYY hh:mm A')
@@ -102,6 +112,8 @@ class Earning extends Resource
             DateTime::make('Updated At')
                     ->format('MMM, DD YYYY hh:mm A')
                     ->hideFromIndex(),
+
+            HasMany::make('Commissions'),
         ];
     }
 
@@ -148,6 +160,8 @@ class Earning extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new ImportEarnings(),
+        ];
     }
 }

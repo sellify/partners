@@ -2,7 +2,7 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\App;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
@@ -12,6 +12,8 @@ use Laravel\Nova\Fields\Text;
 
 class Setting extends Resource
 {
+    use ResourceCommon;
+
     /**
      * The model the resource corresponds to.
      *
@@ -25,6 +27,13 @@ class Setting extends Resource
      * @var string
      */
     public static $title = 'id';
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $subtitle = 'title';
 
     /**
      * Indicates if the resoruce should be globally searchable.
@@ -75,10 +84,16 @@ class Setting extends Resource
                   })->sortable(),
 
             Select::make('First Payout On', 'payout_date_1')
-                  ->options(array_combine(range(1, 31), range(1, 31))),
+                  ->options(array_combine(range(1, 31), range(1, 31)))
+                  ->displayUsing(function ($date) {
+                      return Carbon::now()->setDay($date)->isoFormat('Do');
+                  }),
 
             Select::make('Second Payout On', 'payout_date_2')
-                  ->options(array_combine(range(1, 31), range(1, 31))),
+                  ->options(array_combine(range(1, 31), range(1, 31)))
+            ->displayUsing(function ($date) {
+                return Carbon::now()->setDay($date)->isoFormat('Do');
+            }),
 
             DateTime::make('Created At')
                     ->format('MMM, DD YYYY hh:mm A')

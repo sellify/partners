@@ -2,10 +2,8 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\App;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -13,6 +11,8 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Commission extends Resource
 {
+    use ResourceCommon;
+
     /**
      * The model the resource corresponds to.
      *
@@ -26,6 +26,13 @@ class Commission extends Resource
      * @var string
      */
     public static $title = 'id';
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $subtitle = 'user.username';
 
     /**
      * The columns that should be searched.
@@ -58,7 +65,16 @@ class Commission extends Resource
 
             BelongsTo::make('Referrer', 'user', User::class),
 
-            BelongsTo::make('Earning', 'earning', Earning::class),
+            BelongsTo::make('Earning', 'earning', Earning::class)
+            ->hideFromIndex(),
+
+            BelongsTo::make('Shop', 'shop', Shop::class),
+
+            BelongsTo::make('App', 'app', App::class),
+
+            BelongsTo::make('Payout', 'payout', Payout::class)
+                ->nullable()
+                     ->hideFromIndex(),
 
             Number::make('Amount')
                   ->rules(['required', 'numeric'])
@@ -67,11 +83,12 @@ class Commission extends Resource
                   })
                   ->sortable(),
 
-            Boolean::make('Paid'),
+            DateTime::make('Paid At')
+                    ->format('MMM, DD YYYY hh:mm A')
+            ->nullable(),
 
             DateTime::make('Created At')
-                    ->format('MMM, DD YYYY hh:mm A')
-                    ->hideFromIndex(),
+                    ->format('MMM, DD YYYY hh:mm A'),
 
             DateTime::make('Updated At')
                     ->format('MMM, DD YYYY hh:mm A')

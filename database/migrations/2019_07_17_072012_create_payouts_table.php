@@ -19,7 +19,7 @@ class CreatePayoutsTable extends Migration
             $table->integer('amount');
             $table->string('payment_method');
             $table->string('transaction_id');
-            $table->date('payout_at')->nullable();
+            $table->timestamp('payout_at')->nullable();
             $table->text('notes');
             $table->timestamps();
         });

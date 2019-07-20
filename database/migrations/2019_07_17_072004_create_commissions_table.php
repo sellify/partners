@@ -16,9 +16,12 @@ class CreateCommissionsTable extends Migration
         Schema::create('commissions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id');
+            $table->bigInteger('app_id')->unsigned();
             $table->bigInteger('earning_id')->unsigned();
+            $table->bigInteger('payout_id')->nullable()->default(null)->unsigned();
+            $table->bigInteger('shop_id')->unsigned();
             $table->integer('amount');
-            $table->boolean('paid')->default(false);
+            $table->timestamp('paid_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

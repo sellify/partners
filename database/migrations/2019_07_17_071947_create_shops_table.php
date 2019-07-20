@@ -15,7 +15,7 @@ class CreateShopsTable extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('user_id');
+            $table->bigInteger('user_id')->nullable();
             $table->bigInteger('app_id')->unsigned();
             $table->string('shopify_domain');
             $table->timestamp('last_charge_at')->nullable();

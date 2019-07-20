@@ -13,7 +13,9 @@ trait ResourceCommon
      */
     public function title()
     {
-        return $this->get_value($this, self::$title);
+        if (property_exists(self::class, 'title')) {
+            return $this->get_value($this, self::$title);
+        }
     }
 
     /**
@@ -23,7 +25,9 @@ trait ResourceCommon
      */
     public function subtitle()
     {
-        return $this->get_value($this, self::$subtitle);
+        if (property_exists(self::class, 'subtitle')) {
+            return $this->get_value($this, self::$subtitle);
+        }
     }
 
     /**

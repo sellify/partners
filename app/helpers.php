@@ -19,3 +19,22 @@ function addQueryParam($url, $key, $value)
         return ($url . '&' . $key . '=' . $value);
     }
 }
+
+/**
+ * Print data
+ * @param mixed ...$arguments
+ */
+function pr(...$arguments)
+{
+    echo '<pre>';
+    foreach ($arguments as $i => $argument) {
+        if ($i < count($arguments)) {
+            print_r($argument);
+        }
+    }
+    echo '</pre>';
+
+    if ($arguments[count($arguments) - 1] !== false) {
+        exit;
+    }
+}
