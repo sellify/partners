@@ -8,9 +8,12 @@ use Laravel\Nova\Http\Requests\ResourceDetailRequest;
 use Laravel\Nova\Http\Requests\ResourceIndexRequest;
 use Laravel\Nova\Http\Requests\UpdateResourceRequest;
 use Laravel\Nova\Resource as NovaResource;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 abstract class Resource extends NovaResource
 {
+    use SearchesRelations;
+
     /**
      * Build an "index" query for the given resource.
      *

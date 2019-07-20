@@ -50,6 +50,28 @@ class Earning extends Resource
     ];
 
     /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'shop' => [
+            'shopify_domain',
+        ],
+        'app' => [
+            'name',
+            'slug',
+        ],
+    ];
+
+    /**
+     * Determine if relations should be searched globally.
+     *
+     * @var array
+     */
+    public static $searchRelationsGlobally = false;
+
+    /**
      * Indicates if the resoruce should be globally searchable.
      *
      * @var bool

@@ -44,10 +44,33 @@ class Payout extends Resource
      */
     public static $search = [
         'id',
+        'title',
         'payment_method',
         'transaction_id',
         'notes',
     ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'user' => [
+            'name',
+            'username',
+            'email',
+            'paypal_email',
+            'user_type',
+        ],
+    ];
+
+    /**
+     * Determine if relations should be searched globally.
+     *
+     * @var array
+     */
+    public static $searchRelationsGlobally = false;
 
     /**
      * Indicates if the resoruce should be globally searchable.

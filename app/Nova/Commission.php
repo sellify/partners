@@ -48,6 +48,31 @@ class Commission extends Resource
     ];
 
     /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'shop' => [
+            'shopify_domain',
+        ],
+        'user' => [
+            'name',
+            'username',
+            'email',
+            'paypal_email',
+            'user_type',
+        ],
+    ];
+
+    /**
+     * Determine if relations should be searched globally.
+     *
+     * @var array
+     */
+    public static $searchRelationsGlobally = false;
+
+    /**
      * Indicates if the resoruce should be globally searchable.
      *
      * @var bool
