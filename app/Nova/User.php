@@ -30,7 +30,7 @@ class User extends Resource
      *
      * @var string
      */
-    public static $model = 'App\\User';
+    public static $model = \App\User::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -87,12 +87,18 @@ class User extends Resource
 
             Text::make('Username')
                 ->sortable()
+                ->canSee(function ($request) {
+                    return $request->user()->isAdmin();
+                })
                 ->rules('required', 'max:254')
                 ->creationRules('unique:users')
                 ->updateRules('unique:users,username,{{resourceId}}'),
 
             Text::make('Email')
                 ->sortable()
+                ->readonly(function ($request) {
+                    return !$request->user()->isAdmin();
+                })
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}')
@@ -111,6 +117,9 @@ class User extends Resource
                   ] : [
                       'affiliate' => 'Affiliate',
                   ])
+                ->canSee(function ($request) {
+                    return $request->user()->isAdmin();
+                })
                   ->hideFromIndex()
                   ->hideFromDetail(),
 
@@ -133,7 +142,10 @@ class User extends Resource
                     ])
                   ->displayUsing(function ($commission) {
                       return $commission . '%';
-                  }),
+                  })
+                ->canSee(function ($request) {
+                    return $request->user()->isAdmin();
+                }),
 
             Number::make('Minimum Payout')
                   ->rules(['required', 'numeric'])
@@ -148,6 +160,9 @@ class User extends Resource
                  ->displayUsing(function ($price) {
                      return $price > 0 ? '$' . number_format($price / 100, 2) : 'N/A';
                  })
+                ->canSee(function ($request) {
+                    return $request->user()->isAdmin();
+                })
                  ->help('The amount in cents. If you paid $10.00, put 1000 in the field.')
                  ->sortable(),
 

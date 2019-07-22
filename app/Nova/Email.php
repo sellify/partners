@@ -19,7 +19,7 @@ class Email extends Resource
      *
      * @var string
      */
-    public static $model = 'App\\Email';
+    public static $model = \App\Email::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

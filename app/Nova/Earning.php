@@ -20,7 +20,7 @@ class Earning extends Resource
      *
      * @var string
      */
-    public static $model = 'App\\Earning';
+    public static $model = \App\Earning::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

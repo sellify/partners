@@ -34,7 +34,7 @@ class UserPolicy
 
     public function viewAny(User $user)
     {
-        return $user->isSuperAdmin() || $user->isAdmin();
+        return true;
     }
 
     public function create(User $user)
@@ -52,7 +52,7 @@ class UserPolicy
             return $user->isAdmin();
         }
 
-        return $user->isAdmin();
+        return $user->isAdmin() || $resource->id === $user->id;
     }
 
     public function delete(User $user, User $resource)

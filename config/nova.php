@@ -75,6 +75,7 @@ return [
         DispatchServingNovaEvent::class,
         BootTools::class,
         Authorize::class,
+        'verified',
     ],
 
     /*

@@ -5,11 +5,12 @@ namespace App;
 use App\Traits\Relations\HasMany\Commissions as HasManyCommissions;
 use App\Traits\Relations\HasMany\Payouts as HasManyPayouts;
 use App\Traits\Relations\HasMany\Shops as HasManyShops;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable,
         HasApiTokens,

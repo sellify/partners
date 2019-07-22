@@ -1,7 +1,7 @@
 <p class="mt-8 text-center text-xs text-80">
-    <a href="https://nova.laravel.com" class="text-primary dim no-underline">Laravel Nova</a>
+    <a href="https://sellify.dev" target="_blank" class="text-primary dim no-underline">Sellify</a>
     <span class="px-1">&middot;</span>
-    &copy; {{ date('Y') }} Laravel LLC - By Taylor Otwell, David Hemphill, and Steve Schoger.
+    &copy; {{ date('Y') }} Sellify - By Nivesh Saharan
     <span class="px-1">&middot;</span>
     v{{ Laravel\Nova\Nova::version() }}
 </p>

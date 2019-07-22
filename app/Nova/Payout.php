@@ -21,7 +21,7 @@ class Payout extends Resource
      *
      * @var string
      */
-    public static $model = 'App\\Payout';
+    public static $model = \App\Payout::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

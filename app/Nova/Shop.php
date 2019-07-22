@@ -20,7 +20,7 @@ class Shop extends Resource
      *
      * @var string
      */
-    public static $model = 'App\\Shop';
+    public static $model = \App\Shop::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

@@ -20,7 +20,7 @@ class Commission extends Resource
      *
      * @var string
      */
-    public static $model = 'App\\Commission';
+    public static $model = \App\Commission::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
