@@ -21,6 +21,6 @@ class Setting extends Model
             self::$firstSetting = self::first();
         }
 
-        return self::$firstSetting && self::$firstSetting->$key ? self::$firstSetting->$key : $default;
+        return self::$firstSetting->$key ?? $default;
     }
 }

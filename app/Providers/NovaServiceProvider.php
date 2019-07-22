@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Anaseqal\NovaImport\NovaImport;
 use App\Nova\App;
+use Christophrumpel\NovaNotifications\NovaNotifications;
 use Laravel\Nova\Nova;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\NovaApplicationServiceProvider;
@@ -66,6 +67,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         return [
             new NovaImport(),
+            new NovaNotifications(),
         ];
     }
 
