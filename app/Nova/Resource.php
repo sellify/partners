@@ -67,7 +67,7 @@ abstract class Resource extends NovaResource
     /**
      * Check the current view.
      *
-     * @param  string                                  $view
+     * @param  string|array                                  $view
      * @param  $request
      *
      * @retrun bool
@@ -86,25 +86,32 @@ abstract class Resource extends NovaResource
             ],
         ];
 
-        $classes = $classesByView[$view] ?? [];
+        $views = is_array($view) ? $view : [$view];
 
-        $classes = is_array($classes) ? $classes : [$classes];
-
-        foreach ($classes as $class) {
-            if ($request instanceof $class) {
-                $response = true;
+        foreach ($views as $view) {
+            if ($response) {
                 break;
             }
-        }
+            $classes = $classesByView[$view] ?? [];
 
-        if (!$response) {
-            if ($request instanceof NovaRequest) {
-                if ($view === 'form') {
-                    $response = $request->isCreateOrAttachRequest() || $request->isUpdateOrUpdateAttachedRequest();
-                } elseif ($view === 'create') {
-                    $response = $request->isCreateOrAttachRequest();
-                } elseif ($view === 'update') {
-                    $response = $request->isUpdateOrUpdateAttachedRequest();
+            $classes = is_array($classes) ? $classes : [$classes];
+
+            foreach ($classes as $class) {
+                if ($request instanceof $class) {
+                    $response = true;
+                    break;
+                }
+            }
+
+            if (!$response) {
+                if ($request instanceof NovaRequest) {
+                    if ($view === 'form') {
+                        $response = $request->isCreateOrAttachRequest() || $request->isUpdateOrUpdateAttachedRequest();
+                    } elseif ($view === 'create') {
+                        $response = $request->isCreateOrAttachRequest();
+                    } elseif ($view === 'update') {
+                        $response = $request->isUpdateOrUpdateAttachedRequest();
+                    }
                 }
             }
         }

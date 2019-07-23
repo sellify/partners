@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Setting;
+use App\UserSetting;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SettingPolicy
+class UserSettingPolicy
 {
     use HandlesAuthorization;
 
@@ -20,14 +20,14 @@ class SettingPolicy
         //
     }
 
-    public function view(User $user, Setting $resource)
+    public function view(User $user, UserSetting $resource)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $resource->user_id === $user->id;
     }
 
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+        return true;
     }
 
     public function create(User $user)
@@ -35,22 +35,22 @@ class SettingPolicy
         return $user->isAdmin();
     }
 
-    public function update(User $user, Setting $resource)
+    public function update(User $user, UserSetting $resource)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || ($resource->user_id === $user->id && $resource->setting->is_editable);
     }
 
-    public function delete(User $user, Setting $resource)
-    {
-        return $user->isSuperAdmin();
-    }
-
-    public function restore(User $user, Setting $resource)
+    public function delete(User $user, UserSetting $resource)
     {
         return $user->isSuperAdmin();
     }
 
-    public function forceDelete(User $user, Setting $resource)
+    public function restore(User $user, UserSetting $resource)
+    {
+        return $user->isSuperAdmin();
+    }
+
+    public function forceDelete(User $user, UserSetting $resource)
     {
         return false;
     }

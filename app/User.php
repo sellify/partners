@@ -5,9 +5,13 @@ namespace App;
 use App\Traits\Relations\HasMany\Commissions as HasManyCommissions;
 use App\Traits\Relations\HasMany\Payouts as HasManyPayouts;
 use App\Traits\Relations\HasMany\Shops as HasManyShops;
+use App\Traits\Relations\BelongsToMany\Settings as BelongsToManySettings;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -16,7 +20,8 @@ class User extends Authenticatable implements MustVerifyEmail
         HasApiTokens,
         HasManyShops,
         HasManyCommissions,
-        HasManyPayouts;
+        HasManyPayouts,
+        BelongsToManySettings;
 
     /**
      * The attributes that are mass assignable.
@@ -74,5 +79,62 @@ class User extends Authenticatable implements MustVerifyEmail
     public function canBeImpersonated()
     {
         return !$this->isSuperAdmin() && $this->id !== request()->user()->id;
+    }
+
+    /**
+     * User settings
+     * @param string $keys
+     *
+     * @return array
+     */
+    public function getSettings($keys = '*', $fresh = false)
+    {
+        $cacheKey = 'user_setting_' . ($this->id ?? 0);
+
+        if ($fresh) {
+            \Cache::forget($cacheKey);
+        }
+
+        $formattedSettings = Cache::get($cacheKey, function () use ($cacheKey, $keys) {
+            $settings = Setting::distinct()->leftJoin('user_setting', function (JoinClause $join) {
+                $join->on('settings.id', '=', 'user_setting.setting_id');
+                $join->on('user_setting.user_id', '=', \DB::raw($this->id ?? 0));
+            });
+
+            if ($keys != '*') {
+                $keys = !is_array($keys) ? [$keys] : $keys;
+                $settings = $settings->whereIn('settings.name', $keys);
+            }
+
+            $settings->select([
+                'settings.id',
+                'user_setting.id as user_setting_id',
+                'settings.name',
+                'settings.value as default_value',
+                'settings.type',
+                'settings.identifier',
+                'user_setting.value',
+            ])->get()->each(function ($setting) use (&$formattedSettings) {
+                $formattedSettings[$setting['identifier']][$setting['name']] = app_setting(['custom' => $setting->toArray()], 'custom', true);
+            });
+
+            Cache::add($cacheKey, $formattedSettings, now()->addDays(7));
+
+            return $formattedSettings;
+        });
+
+        return $formattedSettings;
+    }
+
+    /**
+     * Get single setting
+     * @param      $key
+     * @param null $default
+     *
+     * @return mixed
+     */
+    public function setting($key, $default = null, $fresh = false)
+    {
+        return Arr::get($this->getSettings('*', $fresh), $key, $default);
     }
 }

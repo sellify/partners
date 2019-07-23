@@ -2,13 +2,15 @@
 
 namespace App\Nova;
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 
 class Setting extends Resource
 {
@@ -26,21 +28,7 @@ class Setting extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
-    public static $subtitle = 'title';
-
-    /**
-     * Indicates if the resoruce should be globally searchable.
-     *
-     * @var bool
-     */
-    public static $globallySearchable = false;
+    public static $title = ['identifier', '.', 'name'];
 
     /**
      * The columns that should be searched.
@@ -49,11 +37,12 @@ class Setting extends Resource
      */
     public static $search = [
         'id',
-        'title',
-        'minimum_payout',
-        'commission',
-        'payout_date_1',
-        'payout_date_2',
+        'name',
+        'label',
+        'description',
+        'value',
+        'placeholder',
+        'identifier',
     ];
 
     /**
@@ -66,46 +55,40 @@ class Setting extends Resource
     {
         return [
             ID::make()->sortable(),
-
-            Text::make('Title'),
-
-            Number::make('Commission %', 'commission')
-                  ->sortable()
-                  ->max(100)
-                  ->min(0)
-                  ->displayUsing(function ($commission) {
-                      return $commission . '%';
-                  }),
-
-            Number::make('Minimum Payout')
-                  ->rules(['required', 'numeric'])
-                  ->displayUsing(function ($price) {
-                      return $price > 0 ? '$' . number_format($price / 100, 2) : 'N/A';
-                  })->sortable(),
-
-            Select::make('First Payout On', 'payout_date_1')
-                  ->options(array_combine(range(1, 31), range(1, 31)))
-                  ->displayUsing(function ($date) {
-                      return Carbon::now()->setDay($date)->isoFormat('Do');
-                  }),
-
-            Select::make('Second Payout On', 'payout_date_2')
-                  ->options(array_combine(range(1, 31), range(1, 31)))
-            ->displayUsing(function ($date) {
-                return Carbon::now()->setDay($date)->isoFormat('Do');
-            }),
+            Text::make('Namespace', 'identifier')->rules('required'),
+            Text::make('Name')->rules(['required']),
+            Text::make('Label')->rules(['required'])->hideFromIndex(),
+            Text::make('Value')->hideFromIndex(),
+            Textarea::make('Description')->hideFromIndex(),
+            Select::make('Type')->options([
+                'BOOLEAN'    => 'Boolean',
+                'TEXT'       => 'Text',
+                'TEXTAREA'   => 'Textarea',
+                'NUMBER'     => 'Number',
+                'JSON'       => 'JSON',
+                'CODE'       => 'Code',
+            ])->rules(['required']),
+            Text::make('Placeholder')->hideFromIndex(),
+            Code::make('metadata')->json()->hideFromIndex(),
+            Boolean::make('Editable', 'is_editable')->hideFromIndex(),
 
             DateTime::make('Created At')
                     ->format('MMM, DD YYYY hh:mm A')
-                    ->hideWhenCreating()
+                    ->hideFromIndex()
                     ->hideWhenUpdating()
-                    ->hideFromIndex(),
+                    ->hideWhenCreating(),
 
             DateTime::make('Updated At')
                     ->format('MMM, DD YYYY hh:mm A')
+                    ->hideFromIndex()
                     ->hideWhenCreating()
-                    ->hideWhenUpdating()
-                    ->hideFromIndex(),
+                    ->hideWhenUpdating(),
+
+            BelongsToMany::make('Users')->fields(function () {
+                return [
+                    Textarea::make('value'),
+                ];
+            })->searchable(),
         ];
     }
 
@@ -117,8 +100,7 @@ class Setting extends Resource
      */
     public function cards(Request $request)
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -129,8 +111,7 @@ class Setting extends Resource
      */
     public function filters(Request $request)
     {
-        return [
-        ];
+        return [];
     }
 
     /**

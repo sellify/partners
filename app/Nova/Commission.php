@@ -90,18 +90,22 @@ class Commission extends Resource
         return [
             ID::make()->sortable(),
 
-            BelongsTo::make('Referrer', 'user', User::class),
+            BelongsTo::make('Referrer', 'user', User::class)
+                     ->searchable(),
 
             BelongsTo::make('Earning', 'earning', Earning::class)
             ->hideFromIndex(),
 
-            BelongsTo::make('Shop', 'shop', Shop::class),
+            BelongsTo::make('Shop', 'shop', Shop::class)
+                ->searchable(),
 
-            BelongsTo::make('App', 'app', App::class),
+            BelongsTo::make('App', 'app', App::class)
+                     ->searchable(),
 
             BelongsTo::make('Payout', 'payout', Payout::class)
-                ->nullable()
-                     ->hideFromIndex(),
+                     ->nullable()
+                     ->hideFromIndex()
+                     ->searchable(),
 
             Number::make('Amount')
                   ->rules(['required', 'numeric'])
@@ -179,7 +183,7 @@ class Commission extends Resource
                 return false;
             })
             ->canRun(function ($request, $model) {
-                return $request->user()->isAdmin() & $model && !$model->paid_at;
+                return $request->user()->isAdmin() && $model && !$model->paid_at;
             }),
         ];
     }

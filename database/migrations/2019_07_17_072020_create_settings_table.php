@@ -14,13 +14,18 @@ class CreateSettingsTable extends Migration
     public function up()
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('title')->default('Partners');
-            $table->integer('minimum_payout')->default(2500);
-            $table->double('commission')->default(10);
-            $table->integer('payout_date_1')->default(25);
-            $table->integer('payout_date_2')->default(07);
+            $table->bigIncrements('id')->unsigned();
+            $table->string('name');
+            $table->string('label');
+            $table->text('value')->nullable();
+            $table->text('description');
+            $table->string('type');
+            $table->string('placeholder')->nullable();
+            $table->string('identifier');
+            $table->json('metadata')->nullable(true)->default(null);
+            $table->boolean('is_editable')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -105,9 +105,11 @@ class Shop extends Resource
                     }
                 }),
 
-            BelongsTo::make('App', 'app', \App\Nova\App::class),
+            BelongsTo::make('App', 'app', \App\Nova\App::class)
+                     ->searchable(),
 
-            BelongsTo::make('Referrer', 'user', User::class),
+            BelongsTo::make('Referrer', 'user', User::class)
+                     ->searchable(),
 
             DateTime::make('Last Charge At')
                     ->format('MMM, DD YYYY hh:mm A')

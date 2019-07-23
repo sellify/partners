@@ -14,7 +14,16 @@ trait ResourceCommon
     public function title()
     {
         if (property_exists(self::class, 'title')) {
-            return $this->get_value($this, self::$title);
+            $title = [];
+            $titleFields = self::$title;
+
+            $titleFields = is_array($titleFields) ? $titleFields : [$titleFields];
+
+            foreach ($titleFields as $titleField) {
+                $title[] = $this->get_value($this, $titleField, $titleField);
+            }
+
+            return implode('', $title);
         }
     }
 
@@ -26,7 +35,16 @@ trait ResourceCommon
     public function subtitle()
     {
         if (property_exists(self::class, 'subtitle')) {
-            return $this->get_value($this, self::$subtitle);
+            $title = [];
+            $titleFields = self::$subtitle;
+
+            $titleFields = is_array($titleFields) ? $titleFields : [$titleFields];
+
+            foreach ($titleFields as $titleField) {
+                $title[] = $this->get_value($this, $titleField, $titleField);
+            }
+
+            return implode('', $title);
         }
     }
 
@@ -63,6 +81,6 @@ trait ResourceCommon
             }
         }
 
-        return $value;
+        return $value ? $value : ($default ? $default : $value);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\HasMany;
@@ -11,6 +12,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use KABBOUCHI\NovaImpersonate\Impersonate;
 
@@ -88,7 +90,7 @@ class User extends Resource
             Text::make('Username')
                 ->sortable()
                 ->canSee(function ($request) {
-                    return $request->user()->isAdmin();
+                    return $request->user()->isAdmin() || $this->viewIs(['index', 'detail'], $request);
                 })
                 ->rules('required', 'max:254')
                 ->creationRules('unique:users')
@@ -118,7 +120,7 @@ class User extends Resource
                       'affiliate' => 'Affiliate',
                   ])
                 ->canSee(function ($request) {
-                    return $request->user()->isAdmin();
+                    return $request->user()->isAdmin() || $this->viewIs(['index', 'detail'], $request);
                 })
                   ->hideFromIndex()
                   ->hideFromDetail(),
@@ -132,19 +134,21 @@ class User extends Resource
                   ->sortable()
                   ->max(100)
                   ->min(0)
-                    ->withMeta([
+                    ->withMeta(array_merge(
+                        [
                         'extraAttributes' => [
                             'placeholder' => 'Example: 10',
                         ],
+                    ],
                         $this->viewIs('form', $request) ? [
-                            'value' => $this->commission ?? \App\Setting::value('commission'),
-                        ] : [],
-                    ])
+                            'value' => $this->commission ?? $request->user()->setting('user.commission'),
+                        ] : []
+                    ))
                   ->displayUsing(function ($commission) {
                       return $commission . '%';
                   })
                 ->canSee(function ($request) {
-                    return $request->user()->isAdmin();
+                    return $request->user()->isAdmin() || $this->viewIs(['index', 'detail'], $request);
                 }),
 
             Number::make('Minimum Payout')
@@ -155,13 +159,13 @@ class User extends Resource
                         'placeholder' => 'Example: 1000',
                      ],
                  ], $this->viewIs('form', $request) ? [
-                     'value' => $this->minimum_payout ?? \App\Setting::value('minimum_payout'),
+                     'value' => $this->minimum_payout ?? $request->user()->setting('user.minimum_payout'),
                  ] : []))
                  ->displayUsing(function ($price) {
                      return $price > 0 ? '$' . number_format($price / 100, 2) : 'N/A';
                  })
                 ->canSee(function ($request) {
-                    return $request->user()->isAdmin();
+                    return $request->user()->isAdmin() || $this->viewIs(['index', 'detail'], $request);
                 })
                  ->help('The amount in cents. If you paid $10.00, put 1000 in the field.')
                  ->sortable(),
@@ -184,6 +188,12 @@ class User extends Resource
                 HasMany::make('Commissions'),
                 HasMany::make('Payouts'),
                 Impersonate::make($this),
+                BelongsToMany::make('Settings')->fields(function () {
+                    return [
+                        Textarea::make('value'),
+                    ];
+                })
+                ->searchable(),
             ]);
         }
 

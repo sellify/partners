@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Events\ShopInstalledApp;
 use App\Notifications\SuccessfulReferral;
-use App\Setting;
 
 class NotifyReferrer
 {
@@ -26,7 +25,7 @@ class NotifyReferrer
      */
     public function handle(ShopInstalledApp $event)
     {
-        if ($event->shop->user && Setting::value('successful_referral_email')) {
+        if ($event->shop->user && $event->shop->user->setting('user.successful_referral_email')) {
             $event->shop->user->notify(new SuccessfulReferral($event->shop));
         }
     }

@@ -89,9 +89,11 @@ class Earning extends Resource
         return [
             ID::make()->sortable(),
 
-            BelongsTo::make('App', 'app', \App\Nova\App::class),
+            BelongsTo::make('App', 'app', \App\Nova\App::class)
+                     ->searchable(),
 
-            BelongsTo::make('Shop', 'shop', Shop::class),
+            BelongsTo::make('Shop', 'shop', Shop::class)
+                     ->searchable(),
 
             Number::make('Amount')
                   ->rules(['required', 'numeric'])

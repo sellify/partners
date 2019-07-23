@@ -94,7 +94,8 @@ class Payout extends Resource
                 ->help('A title to make sense of what this Payout is for.')
                 ->rules('required', 'max:254'),
 
-            BelongsTo::make('User', 'user', User::class),
+            BelongsTo::make('User', 'user', User::class)
+                     ->searchable(),
 
             Number::make('Amount', 'amount')
                   ->rules(['required', 'numeric'])
