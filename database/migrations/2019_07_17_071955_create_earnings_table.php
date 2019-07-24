@@ -15,7 +15,7 @@ class CreateEarningsTable extends Migration
     {
         Schema::create('earnings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('app_id')->unsigned();
+            $table->bigInteger('app_id')->nullable()->unsigned();
             $table->bigInteger('shop_id')->unsigned();
             $table->integer('amount');
             $table->timestamp('charge_created_at')->nullable();

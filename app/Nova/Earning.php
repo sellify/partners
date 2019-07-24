@@ -3,6 +3,8 @@
 namespace App\Nova;
 
 use App\Nova\Actions\ImportEarnings;
+use App\Nova\Metrics\Trend\EarningsPerDay;
+use App\Nova\Metrics\Trend\EarningsPerPayout;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
@@ -79,6 +81,14 @@ class Earning extends Resource
     public static $globallySearchable = true;
 
     /**
+     * Order by
+     * @var array
+     */
+    public static $orderBy = [
+        'charge_created_at' => 'desc',
+    ];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -122,13 +132,12 @@ class Earning extends Resource
                 ->format('MMM, DD YYYY')
                 ->hideFromIndex(),
 
-            DateTime::make('Payout Date')
-                ->format('MMM, DD YYYY')
-            ->sortable(),
+            DateTime::make('Charged At', 'charge_created_at')
+                    ->format('MMM, DD YYYY hh:mm A'),
 
-            DateTime::make('Charge Created At')
-                    ->format('MMM, DD YYYY hh:mm A')
-                    ->hideFromIndex(),
+            DateTime::make('Payout At', 'payout_date')
+                    ->format('MMM, DD YYYY')
+                    ->sortable(),
 
             DateTime::make('Created At')
                     ->format('MMM, DD YYYY hh:mm A')
@@ -151,6 +160,12 @@ class Earning extends Resource
     public function cards(Request $request)
     {
         return [
+            (new EarningsPerDay())->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            })->width('1/2'),
+            (new EarningsPerPayout())->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            })->width('1/2'),
         ];
     }
 

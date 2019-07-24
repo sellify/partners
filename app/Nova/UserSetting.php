@@ -6,6 +6,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class UserSetting extends Resource
 {
@@ -106,5 +107,22 @@ class UserSetting extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest $request
+     * @param  \Illuminate\Database\Eloquent\Builder   $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $request->user()
+                       ->isAdmin()
+            ? $query
+            : $query->where('user_id', $request->user()
+                ->id);
     }
 }

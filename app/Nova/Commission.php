@@ -4,6 +4,8 @@ namespace App\Nova;
 
 use App\Nova\Actions\PayCommission;
 use App\Nova\Filters\PaidOrUnpaid;
+use App\Nova\Metrics\Trend\CommissionsPerDay;
+use App\Nova\Metrics\Value\NewCommissions;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
@@ -80,6 +82,14 @@ class Commission extends Resource
     public static $globallySearchable = false;
 
     /**
+     * Order by
+     * @var array
+     */
+    public static $orderBy = [
+        'created_at' => 'desc',
+    ];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -136,6 +146,8 @@ class Commission extends Resource
     public function cards(Request $request)
     {
         return [
+            (new NewCommissions())->width('1/2'),
+            (new CommissionsPerDay())->width('1/2'),
         ];
     }
 

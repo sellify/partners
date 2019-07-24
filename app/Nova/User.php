@@ -2,6 +2,10 @@
 
 namespace App\Nova;
 
+use App\Nova\Metrics\Trend\CommissionsPerDay;
+use App\Nova\Metrics\Trend\ShopsPerDay;
+use App\Nova\Metrics\Trend\UsersPerDay;
+use App\Nova\Metrics\Value\NewUsers;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
@@ -208,7 +212,16 @@ class User extends Resource
      */
     public function cards(Request $request)
     {
-        return [];
+        return [
+            (new NewUsers())->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
+            (new UsersPerDay())->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            })->width('1/2'),
+            (new CommissionsPerDay())->resourceColumn('user_id')->width('1/2')->onlyOnDetail(),
+            (new ShopsPerDay())->resourceColumn('user_id')->width('1/2')->onlyOnDetail(),
+        ];
     }
 
     /**

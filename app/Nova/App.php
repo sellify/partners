@@ -2,6 +2,12 @@
 
 namespace App\Nova;
 
+use App\Nova\Metrics\Partition\EarningsPerApp;
+use App\Nova\Metrics\Partition\ShopsPerApp;
+use App\Nova\Metrics\Trend\CommissionsPerDay;
+use App\Nova\Metrics\Trend\EarningsPerDay;
+use App\Nova\Metrics\Trend\EarningsPerPayout;
+use App\Nova\Metrics\Trend\ShopsPerDay;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
@@ -158,6 +164,18 @@ class App extends Resource
     public function cards(Request $request)
     {
         return [
+            (new ShopsPerApp())->width('1/2'),
+            (new EarningsPerApp())->width('1/2')->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
+            (new EarningsPerDay())->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            })->resourceColumn('app_id')->width('1/2')->onlyOnDetail(),
+            (new EarningsPerPayout())->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            })->resourceColumn('app_id')->width('1/2')->onlyOnDetail(),
+            (new CommissionsPerDay())->resourceColumn('app_id')->width('1/2')->onlyOnDetail(),
+            (new ShopsPerDay())->resourceColumn('app_id')->width('1/2')->onlyOnDetail(),
         ];
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Nova;
 
+use App\Nova\Metrics\Partition\ShopsPerApp;
+use App\Nova\Metrics\Trend\ShopsPerDay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
@@ -143,6 +145,8 @@ class Shop extends Resource
     public function cards(Request $request)
     {
         return [
+            (new ShopsPerApp())->width('1/2'),
+            (new ShopsPerDay())->width('1/2'),
         ];
     }
 

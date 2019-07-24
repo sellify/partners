@@ -36,8 +36,8 @@ class EarningsImporter implements ToCollection, WithHeadingRow
 
         $rows = $rows->map(function ($row) use ($mappings, $apps, &$shops) {
             $data = [];
-            if (isset($row['payout_period'], $row['payout_date'], $row['shop'], $row['payout_date'], $row['partner_share'], $row['app_title'], $apps[$row['app_title']], $row['charge_creation_time'], $row['charge_type'], $row['category'], $row['theme_name'])) {
-                $app = $apps[$row['app_title']];
+            if (isset($row['shop'], $row['payout_date'], $row['partner_share'], $row['charge_creation_time'], $row['charge_type'], $row['category'], $row['theme_name'])) {
+                $app = $row['app_title'] && isset($apps[$row['app_title']]) ? $apps[$row['app_title']] : null;
 
                 $shops[$row['shop'] . '_' . $app] = [
                     'shopify_domain' => $row['shop'],
@@ -64,7 +64,7 @@ class EarningsImporter implements ToCollection, WithHeadingRow
                 $data['end_date'] = $payoutPeriod ? Carbon::createFromFormat('F d, Y', $payoutPeriod[1])->format('Y-m-d 00:00:00') : null;
 
                 $data['payout_date'] = $row['payout_date'] ? Carbon::parse($row['payout_date']) : null;
-                $data['charge_created_at'] = $row['payout_date'] ? Carbon::parse($row['payout_date']) : null;
+                $data['charge_created_at'] = $row['charge_creation_time'] ? Carbon::parse($row['charge_creation_time'])->format('Y-m-d H:i:s') : null;
 
                 $data['amount'] = $row['partner_share'] ? $row['partner_share'] * 100 : null;
             }
@@ -90,7 +90,6 @@ class EarningsImporter implements ToCollection, WithHeadingRow
                 && $row['amount']
                 && $row['charge_created_at']
                 && $row['charge_type']
-                && $row['app_id']
             ) {
                 $shop = $shops->where('shopify_domain', $row['shop'])->where('app_id', $row['app_id'])->first();
 
@@ -115,25 +114,29 @@ class EarningsImporter implements ToCollection, WithHeadingRow
                 }
 
                 Earning::updateOrCreate(
-                        [
-                            'start_date'        => $row['start_date'],
-                            'end_date'          => $row['end_date'],
-                            'shop_id'           => $shop->id,
-                            'app_id'            => $row['app_id'],
-                        ],
-                        [
-                            'start_date'                => $row['start_date'],
-                            'end_date'                  => $row['end_date'],
-                            'payout_date'               => $row['payout_date'],
-                            'shop_id'                   => $shop->id,
-                            'app_id'                    => $row['app_id'],
-                            'amount'                    => $row['amount'],
-                            'charge_created_at'         => $row['charge_created_at'],
-                            'charge_type'               => $row['charge_type'],
-                            'category'                  => $row['category'],
-                            'theme_name'                => $row['theme_name'],
-                        ]
-                    );
+                    [
+                        'shop_id'           => $shop->id,
+                        'app_id'            => $row['app_id'],
+                        'charge_created_at' => $row['charge_created_at'],
+                        'charge_type'       => $row['charge_type'],
+                        'payout_date'       => $row['payout_date']->format('Y-m-d H:i:s'),
+                        'category'          => $row['category'],
+                        'theme_name'        => $row['theme_name'],
+                        'amount'            => $row['amount'],
+                    ],
+                    [
+                        'start_date'                => $row['start_date'],
+                        'end_date'                  => $row['end_date'],
+                        'payout_date'               => $row['payout_date']->format('Y-m-d H:i:s'),
+                        'shop_id'                   => $shop->id,
+                        'app_id'                    => $row['app_id'],
+                        'amount'                    => $row['amount'],
+                        'charge_created_at'         => $row['charge_created_at'],
+                        'charge_type'               => $row['charge_type'],
+                        'category'                  => $row['category'],
+                        'theme_name'                => $row['theme_name'],
+                    ]
+                );
             }
         }
 

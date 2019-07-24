@@ -14,9 +14,14 @@
 <dropdown-menu slot="menu" width="200" direction="rtl">
     <ul class="list-reset">
         <li>
+            <a href="{{ url(Nova::path() . '/resources/users/' . $user->id) }}" class="block no-underline text-90 hover:bg-30 p-3">
+                {{ __('View Profile') }}
+            </a>
+
             <a href="{{ url(Nova::path() . '/resources/users/' . $user->id . '/edit') }}" class="block no-underline text-90 hover:bg-30 p-3">
                 {{ __('Edit Profile') }}
             </a>
+
             <a href="{{ route('nova.logout') }}" class="block no-underline text-90 hover:bg-30 p-3">
                 {{ __('Logout') }}
             </a>

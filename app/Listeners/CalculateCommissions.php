@@ -44,6 +44,7 @@ class CalculateCommissions implements ShouldQueue
                     'shop_id'    => $earning->shop->id,
                     'paid_at'    => null,
                     'amount'     => $commission,
+                    'created_at' => $earning->charge_created_at,
                 ]);
             }
         }
