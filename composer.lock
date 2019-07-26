@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "38ce1481fe85e024ed08d8ba60eec6e8",
+    "content-hash": "0d230bb26fe715e983eb31c5ba1395de",
     "packages": [
         {
             "name": "anaseqal/nova-import",
@@ -1979,6 +1979,63 @@
                 "server"
             ],
             "time": "2019-05-05T09:22:01+00:00"
+        },
+        {
+            "name": "llaski/nova-scheduled-jobs",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/llaski/nova-scheduled-jobs.git",
+                "reference": "5032cd59fc52c4327eca9193c23a89dd3e5d7e47"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/llaski/nova-scheduled-jobs/zipball/5032cd59fc52c4327eca9193c23a89dd3e5d7e47",
+                "reference": "5032cd59fc52c4327eca9193c23a89dd3e5d7e47",
+                "shasum": ""
+            },
+            "require": {
+                "dragonmantank/cron-expression": "^2.2",
+                "illuminate/console": "^5.6|^5.7",
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "illuminate/cache": "^5.6",
+                "orchestra/testbench": "^3.7",
+                "phpunit/phpunit": "^7.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Llaski\\NovaScheduledJobs\\NovaScheduledJobsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Llaski\\NovaScheduledJobs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Larry Laski",
+                    "role": "Developer",
+                    "email": "larry.laski@gmail.com",
+                    "homepage": "https://larrylaski.com"
+                }
+            ],
+            "description": "A Laravel Nova card to view your scheduled jobs.",
+            "homepage": "https://github.com/llaski/nova-scheduled-jobs",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "time": "2018-12-07T18:26:01+00:00"
         },
         {
             "name": "maatwebsite/excel",

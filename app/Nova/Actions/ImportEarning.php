@@ -32,6 +32,8 @@ class ImportEarnings extends Action
      */
     public $availableForEntireResource = true;
 
+    public $message;
+
     /**
      * Perform the action.
      *
@@ -46,14 +48,18 @@ class ImportEarnings extends Action
 
             return Action::message('Import complete');
         } elseif ($fields->cookie) {
-            Artisan::call('shopify:fetch_payments', [
-                'cookie'    => $fields->cookie,
-                'id'        => $fields->id,
-                '--pending' => !!$fields->pending,
-                '--paid'    => !!$fields->paid,
-            ]);
+            if ($this->auth($fields->account_id, $fields->cookie)) {
+                Artisan::queue('shopify:fetch_payments', [
+                    'cookie'    => $fields->cookie,
+                    'id'        => $fields->account_id,
+                    '--pending' => !!$fields->pending,
+                    '--paid'    => !!$fields->paid,
+                ]);
 
-            return Action::message(Artisan::output());
+                return Action::message('The command is added to queue. It will be process shortly.');
+            } else {
+                return Action::danger($this->message ?? 'The auth with Shopify Partners was failed. Please check your cookie or account ID.');
+            }
         }
 
         return Action::danger('Please provide one of CSV file or Cookies.');
@@ -77,9 +83,31 @@ class ImportEarnings extends Action
                         ],
                     ])
                     ->help('Paste your Shopify Parteners cookie here if you want to pull from API.'),
-            Number::make('id'),
+            Number::make('Partners Account ID', 'account_id'),
             Boolean::make('Pending'),
             Boolean::make('Paid'),
         ];
+    }
+
+    /**
+     * Dummy request to check auth
+     * @return mixed
+     */
+    private function auth($accountId, $cookie)
+    {
+        try {
+            $earnings = rest('GET', "https://partners.shopify.com/{$accountId}/payments/pending.json", [
+                'limit' => 1,
+                'page'  => 1,
+            ], [
+                'Cookie' => '_ENV["' . $cookie . '"]',
+            ])->body;
+
+            return $earnings;
+        } catch (\Exception $e) {
+            $this->message = $e->getCode() === 404 ? 'Account ID is invalid.' : $e->getMessage();
+        }
+
+        return false;
     }
 }

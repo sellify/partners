@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\App;
+use App\Events\EarningAdded;
 use App\Shop;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -17,8 +18,8 @@ class FetchPaymentsFromShopify extends Command
      */
     protected $signature = 'shopify:fetch_payments
                             {id : Your Shopify Partners ID} 
-                            {cookie : Shopify Partners cookie from one of your logged in account having permissions to financials. }
-                            {limit=-1 : Maximum payouts to fetch}
+                            {cookie : Shopify Partners cookie from one of your logged in account having permissions to financial. }
+                            {limit=0 : Maximum payouts to fetch}
                             {--paid : Fetch paid earnings}
                             {--pending : Fetch pending earnings}';
 
@@ -30,7 +31,7 @@ class FetchPaymentsFromShopify extends Command
     protected $description = 'Fetch payments from Shopify Partners API';
 
     protected $perPage = 250;
-    protected $limit = -1;
+    protected $limit = 0;
     protected $cookie;
     protected $accountId;
     protected $payments = [];
@@ -92,6 +93,9 @@ class FetchPaymentsFromShopify extends Command
                 $this->info('Fetching pending earnings....');
                 $this->fetchPendingEarnings();
             }
+
+            // [Event]
+            event(new EarningAdded());
         }
     }
 
@@ -121,7 +125,7 @@ class FetchPaymentsFromShopify extends Command
                     'price'        => ceil($earning->total_price * 1.2 * 100),
                 ]);
 
-                $apps[$app->name] = $app->id;
+                $this->apps[$app->name] = $app->id;
                 $appId = $app->id;
             }
 
