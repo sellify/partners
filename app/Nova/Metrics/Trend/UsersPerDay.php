@@ -2,12 +2,15 @@
 
 namespace App\Nova\Metrics\Trend;
 
+use App\Traits\Nova\CacheKey;
 use App\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Trend;
 
 class UsersPerDay extends Trend
 {
+    use CacheKey;
+
     /**
      * Calculate the value of the metric.
      *
@@ -16,7 +19,7 @@ class UsersPerDay extends Trend
      */
     public function calculate(Request $request)
     {
-        return $this->countByDays($request, User::class)->showLatestValue();
+        return $this->countByDays($request, User::where('user_type', 'affiliate'))->showLatestValue();
     }
 
     /**
@@ -42,7 +45,7 @@ class UsersPerDay extends Trend
      */
     public function cacheFor()
     {
-        return now()->addMinutes(5);
+        //return now()->addMinutes(5);
     }
 
     /**

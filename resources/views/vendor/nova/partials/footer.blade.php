@@ -5,3 +5,8 @@
     <span class="px-1">&middot;</span>
     v{{ Laravel\Nova\Nova::version() }}
 </p>
+<style>
+    .min-w-site {
+        min-width: 0 !important;
+    }
+</style>

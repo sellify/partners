@@ -12,6 +12,11 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ mix('app.css', 'vendor/nova') }}">
+    <style>
+        .min-w-site{
+            min-width: 0;
+        }
+    </style>
 </head>
 <body class="bg-40 text-black h-full">
     <div class="h-full">

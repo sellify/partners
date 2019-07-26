@@ -32,9 +32,9 @@ class PaidOrUnpaid extends Filter
     public function apply(Request $request, $query, $value)
     {
         if ($value === 'paid') {
-            $query = $query->whereNotNull('paid_at');
+            $query = $query->whereNotNull('paid_at')->whereNotNull('payout_id');
         } elseif ($value === 'unpaid') {
-            $query = $query->whereNull('paid_at');
+            $query = $query->whereNull('paid_at')->orWhereNull('payout_id');
         }
 
         return $query;

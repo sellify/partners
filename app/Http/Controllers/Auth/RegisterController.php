@@ -65,12 +65,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name'         => $data['name'],
             'email'        => $data['email'],
             'paypal_email' => $data['paypal_email'],
             'username'     => $data['username'],
             'password'     => Hash::make($data['password']),
         ]);
+
+        if ($user->id === 1) {
+            $user->update([
+                'user_type' => 'super',
+            ]);
+        }
+
+        return $user;
     }
 }

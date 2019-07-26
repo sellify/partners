@@ -3,6 +3,7 @@
 namespace App\Nova\Metrics\Trend;
 
 use App\Earning;
+use App\Traits\Nova\CacheKey;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Trend;
@@ -10,6 +11,8 @@ use Laravel\Nova\Metrics\TrendResult;
 
 class EarningsPerPayout extends Trend
 {
+    use CacheKey;
+
     protected $resourceColumn = 'app_id';
 
     /**
@@ -78,7 +81,7 @@ class EarningsPerPayout extends Trend
      */
     public function cacheFor()
     {
-        //return now()->addMinutes(5);
+        return now()->addMinutes(5);
     }
 
     /**

@@ -2,12 +2,15 @@
 
 namespace App\Nova\Metrics\Value;
 
+use App\Traits\Nova\CacheKey;
 use App\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Value;
 
 class NewUsers extends Value
 {
+    use CacheKey;
+
     /**
      * The width of the card (1/3, 1/2, or full).
      *

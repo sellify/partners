@@ -20,7 +20,7 @@ class CreateEarningsTable extends Migration
             $table->integer('amount');
             $table->timestamp('charge_created_at')->nullable();
             $table->string('charge_type');
-            $table->string('category');
+            $table->string('category')->nullable();
             $table->string('theme_name')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();

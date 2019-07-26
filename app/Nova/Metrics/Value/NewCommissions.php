@@ -3,11 +3,14 @@
 namespace App\Nova\Metrics\Value;
 
 use App\Commission;
+use App\Traits\Nova\CacheKey;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Value;
 
 class NewCommissions extends Value
 {
+    use CacheKey;
+
     public $name = 'Commissions by range';
 
     /**
@@ -87,7 +90,7 @@ class NewCommissions extends Value
      */
     public function cacheFor()
     {
-        //return now()->addMinutes(5);
+        return now()->addMinutes(5);
     }
 
     /**

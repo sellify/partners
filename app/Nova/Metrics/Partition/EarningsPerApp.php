@@ -4,11 +4,14 @@ namespace App\Nova\Metrics\Partition;
 
 use App\App;
 use App\Earning;
+use App\Traits\Nova\CacheKey;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Partition;
 
 class EarningsPerApp extends Partition
 {
+    use CacheKey;
+
     protected $resourceColumn = 'app_id';
 
     /**
@@ -57,7 +60,7 @@ class EarningsPerApp extends Partition
      */
     public function cacheFor()
     {
-        // return now()->addMinutes(5);
+        return now()->addMinutes(5);
     }
 
     /**

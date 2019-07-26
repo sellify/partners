@@ -3,11 +3,14 @@
 namespace App\Nova\Metrics\Value;
 
 use App\Earning;
+use App\Traits\Nova\CacheKey;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Value;
 
 class NewEarnings extends Value
 {
+    use CacheKey;
+
     public $name = 'Earnings by range';
 
     /**
@@ -61,7 +64,7 @@ class NewEarnings extends Value
      */
     public function cacheFor()
     {
-        //return now()->addMinutes(5);
+        return now()->addMinutes(5);
     }
 
     /**

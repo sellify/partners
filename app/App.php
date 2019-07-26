@@ -13,6 +13,9 @@ class App extends Model
 {
     use HasManyShops, HasManyEarnings, HasManyCommissions;
 
+    protected $guarded = [
+    ];
+
     /**
      * Apps
      *

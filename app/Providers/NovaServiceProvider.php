@@ -16,6 +16,7 @@ use Christophrumpel\NovaNotifications\NovaNotifications;
 use Laravel\Nova\Nova;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Spatie\BackupTool\BackupTool;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -27,6 +28,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
+
+        Nova::style('nova-custom-css', public_path('css/nova-custom-css.css'));
     }
 
     /**
@@ -95,6 +98,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 return $request->user()->isAdmin();
             }),
             (new NovaNotifications())->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
+            (new BackupTool())->canSee(function ($request) {
                 return $request->user()->isAdmin();
             }),
         ];

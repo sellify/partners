@@ -8,6 +8,7 @@ use App\Nova\Metrics\Trend\CommissionsPerDay;
 use App\Nova\Metrics\Value\NewCommissions;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -127,6 +128,10 @@ class Commission extends Resource
             DateTime::make('Paid At')
                     ->format('MMM, DD YYYY hh:mm A')
             ->nullable(),
+
+            Boolean::make('Paid')->withMeta([
+                'value' => $this->paid_at && $this->payout_id,
+            ])->onlyOnIndex(),
 
             DateTime::make('Created At')
                     ->format('MMM, DD YYYY hh:mm A'),

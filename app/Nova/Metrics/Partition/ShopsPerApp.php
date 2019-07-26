@@ -4,11 +4,14 @@ namespace App\Nova\Metrics\Partition;
 
 use App\App;
 use App\Shop;
+use App\Traits\Nova\CacheKey;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Partition;
 
 class ShopsPerApp extends Partition
 {
+    use CacheKey;
+
     protected $resourceColumn = 'app_id';
 
     /**
@@ -61,7 +64,7 @@ class ShopsPerApp extends Partition
      */
     public function cacheFor()
     {
-        // return now()->addMinutes(5);
+        return now()->addMinutes(5);
     }
 
     /**
