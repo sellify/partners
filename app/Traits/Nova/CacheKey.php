@@ -27,4 +27,16 @@ trait CacheKey
 
         return $key;
     }
+
+    /**
+     * Determine for how many minutes the metric should be cached.
+     *
+     * @return  \DateTimeInterface|\DateInterval|float|int
+     */
+    public function cacheFor()
+    {
+        $time = now()->addMinutes(5);
+
+        return config('app.env') !== 'production' ? null : $time;
+    }
 }
