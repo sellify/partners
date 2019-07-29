@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Lenses\UsersPayableCommissions;
 use App\Nova\Metrics\Trend\CommissionsPerDay;
 use App\Nova\Metrics\Trend\ShopsPerDay;
 use App\Nova\Metrics\Trend\UsersPerDay;
@@ -245,6 +246,7 @@ class User extends Resource
     public function lenses(Request $request)
     {
         return [
+            new UsersPayableCommissions(),
         ];
     }
 
