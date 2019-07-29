@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Lenses\MostValuableShops;
 use App\Nova\Metrics\Partition\ShopsPerApp;
 use App\Nova\Metrics\Trend\ShopsPerDay;
 use Illuminate\Http\Request;
@@ -172,6 +173,7 @@ class Shop extends Resource
     public function lenses(Request $request)
     {
         return [
+            new MostValuableShops(),
         ];
     }
 

@@ -2,11 +2,14 @@
 
 namespace App\Nova\Filters;
 
+use App\Traits\Nova\Filters\Table;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
 
 class App extends BooleanFilter
 {
+    use Table;
+
     /**
      * The displayable name of the filter.
      *
@@ -29,7 +32,7 @@ class App extends BooleanFilter
         }));
 
         if ($selectedApps) {
-            $query = $query->whereIn('app_id', $selectedApps);
+            $query = $query->whereIn(($this->table ? $this->table . '.' : '') . 'app_id', $selectedApps);
         }
 
         return $query;
