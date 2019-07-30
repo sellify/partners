@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Commission extends Resource
@@ -110,8 +111,7 @@ class Commission extends Resource
             BelongsTo::make('Shop', 'shop', Shop::class)
                 ->searchable(),
 
-            BelongsTo::make('App', 'app', App::class)
-                     ->searchable(),
+            BelongsTo::make('App', 'app', App::class),
 
             BelongsTo::make('Payout', 'payout', Payout::class)
                      ->nullable()
@@ -127,11 +127,18 @@ class Commission extends Resource
 
             DateTime::make('Paid At')
                     ->format('MMM, DD YYYY hh:mm A')
-            ->nullable(),
+            ->nullable()
+            ->hideFromIndex(),
 
             Boolean::make('Paid')->withMeta([
                 'value' => $this->paid_at && $this->payout_id,
             ])->onlyOnIndex(),
+
+            Text::make('Transaction ID', 'transaction_id')
+                ->rules('max:254')->hideFromIndex(),
+
+            Text::make('Transaction Status', 'transaction_status')
+                ->rules('max:254')->hideFromIndex(),
 
             DateTime::make('Created At')
                     ->format('MMM, DD YYYY hh:mm A'),

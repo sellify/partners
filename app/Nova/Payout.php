@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -94,9 +93,6 @@ class Payout extends Resource
                 ->help('A title to make sense of what this Payout is for.')
                 ->rules('required', 'max:254'),
 
-            BelongsTo::make('User', 'user', User::class)
-                     ->searchable(),
-
             Number::make('Amount', 'amount')
                   ->rules(['required', 'numeric'])
                   ->displayUsing(function ($price) {
@@ -119,6 +115,9 @@ class Payout extends Resource
             DateTime::make('Payout At')
                 ->format('MMM, DD YYYY hh:mm A')
                 ->rules('required'),
+
+            Text::make('Status')
+                ->rules('max:254'),
 
             Textarea::make('Notes')
                     ->rules('required')

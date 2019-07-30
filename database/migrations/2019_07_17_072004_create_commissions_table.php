@@ -18,9 +18,11 @@ class CreateCommissionsTable extends Migration
             $table->bigInteger('user_id');
             $table->bigInteger('app_id')->unsigned();
             $table->bigInteger('earning_id')->unsigned();
-            $table->bigInteger('payout_id')->nullable()->default(null)->unsigned();
             $table->bigInteger('shop_id')->unsigned();
             $table->integer('amount');
+            $table->bigInteger('payout_id')->nullable()->default(null)->unsigned();
+            $table->string('transaction_id')->nullable();
+            $table->string('transaction_status')->nullable();
             $table->timestamp('paid_at')->nullable()->default(null);
             $table->timestamps();
         });

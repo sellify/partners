@@ -25,6 +25,7 @@ class ImportEarnings extends Action
      * @var bool
      */
     public $onlyOnIndex = true;
+
     /**
      * Indicates if this action is available to run against the entire resource.
      *
@@ -32,6 +33,11 @@ class ImportEarnings extends Action
      */
     public $availableForEntireResource = true;
 
+    /**
+     * Message
+     *
+     * @var string
+     */
     public $message;
 
     /**

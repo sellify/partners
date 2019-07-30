@@ -16,10 +16,10 @@ class CreatePayoutsTable extends Migration
         Schema::create('payouts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
-            $table->bigInteger('user_id');
             $table->integer('amount');
             $table->string('payment_method');
             $table->string('transaction_id');
+            $table->string('status');
             $table->timestamp('payout_at')->nullable();
             $table->text('notes');
             $table->timestamps();

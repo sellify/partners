@@ -191,7 +191,6 @@ class User extends Resource
             $fields = array_merge($fields, [
                 HasMany::make('Shops'),
                 HasMany::make('Commissions'),
-                HasMany::make('Payouts'),
                 Impersonate::make($this),
                 BelongsToMany::make('Settings')->fields(function () {
                     return [

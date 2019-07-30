@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\CheckPayPalPendingPayoutsStatus;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,6 +27,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('backup:clean')->daily()->at('02:00');
         $schedule->command('backup:run')->daily()->at('02:10');
+
+        // Check and update PayPal batch payout status
+        $schedule->job(new CheckPayPalPendingPayoutsStatus())->dailyAt('03:00')->withoutOverlapping();
     }
 
     /**

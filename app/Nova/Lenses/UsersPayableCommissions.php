@@ -2,6 +2,7 @@
 
 namespace App\Nova\Lenses;
 
+use App\Nova\Actions\PayCommissions;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class UsersPayableCommissions extends Lens
                 return $query->whereNull('commissions.paid_at')
                     ->orWhereNull('commissions.payout_id');
             })
-            ->where('earnings.payout_date', '>', Carbon::now())
+            ->where('earnings.payout_date', '<=', Carbon::now())
             ->orderBy('amount', 'desc')
             ->groupBy('commissions.user_id')
             ->having('amount', '>=', DB::raw('users.minimum_payout'))
@@ -91,7 +92,9 @@ class UsersPayableCommissions extends Lens
      */
     public function actions(Request $request)
     {
-        return parent::actions($request);
+        return [
+            new PayCommissions(),
+        ];
     }
 
     /**
