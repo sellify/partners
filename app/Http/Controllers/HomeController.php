@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class HomeController extends Controller
 {
     /**
@@ -13,7 +11,47 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->only('home');
+    }
+
+    /**
+     * Show home page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+        return view('welcome');
+    }
+
+    /**
+     * Show Login.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function login()
+    {
+        return redirect(route('nova.login'));
+    }
+
+    /**
+     * Show registration page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function register()
+    {
+        return redirect(route('nova.register'));
+    }
+
+    /**
+     * Show Password reset.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function passwordReset()
+    {
+        return redirect(route('nova.password.request'));
     }
 
     /**
@@ -21,8 +59,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function home()
     {
-        return view('home');
+        return redirect(config('nova.path'));
     }
 }

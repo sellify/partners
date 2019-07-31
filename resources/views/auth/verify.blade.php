@@ -1,24 +1,27 @@
-@extends('layouts.app')
+@extends('vendor.nova.auth.layout')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Verify Your Email Address') }}</div>
 
-                <div class="card-body">
-                    @if (session('resent'))
-                        <div class="alert alert-success" role="alert">
-                            {{ __('A fresh verification link has been sent to your email address.') }}
-                        </div>
-                    @endif
+    @include('vendor.nova.auth.partials.header')
+<div class="bg-white shadow rounded-lg p-8 max-w-login mx-auto">
 
-                    {{ __('Before proceeding, please check your email for a verification link.') }}
-                    {{ __('If you did not receive the email') }}, <a href="{{ route('verification.resend') }}">{{ __('click here to request another') }}</a>.
-                </div>
-            </div>
-        </div>
-    </div>
+    @component('vendor.nova.auth.partials.heading')
+        {{ __('Verify Your Email Address') }}
+    @endcomponent
+
+        @if (session('resent'))
+        <p class="text-center font-semibold text-success my-3">
+            {{ __('A fresh verification link has been sent to your email address.') }}
+        </p>
+        @endif
+
+        <p class="my-6 font-semibold text-center leading-normal">
+            {{ __('Before proceeding, please check your email for a verification link.') }}
+            {{ __('If you did not receive the email') }},
+
+            <a class="text-primary dim font-bold no-underline" href="{{ route('verification.resend') }}">{{ __('click here to request another') }}</a>
+
+
+        </p>
 </div>
 @endsection

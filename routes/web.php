@@ -11,10 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes(['verify' => true]);
-
-Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
+Route::get('/', 'HomeController@index');
+Route::get('/login', 'HomeController@login')->name('login');
+Route::get('/password/reset', 'HomeController@passwordReset')->name('password.request');
+Route::get('/home', 'HomeController@home')->name('home')->middleware('verified');

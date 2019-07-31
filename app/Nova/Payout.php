@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Payout extends Resource
 {
@@ -107,13 +106,15 @@ class Payout extends Resource
                   ->sortable(),
 
             Text::make('Payment Method')
-                ->rules('required', 'max:254'),
+                ->rules('required', 'max:254')
+                ->hideFromIndex(),
 
             Text::make('Transaction ID')
-                ->rules('required', 'max:255'),
+                ->rules('required', 'max:255')
+                ->hideFromIndex(),
 
-            DateTime::make('Payout At')
-                ->format('MMM, DD YYYY hh:mm A')
+            DateTime::make('Payout Date', 'payout_at')
+                ->format('MMM, DD YYYY')
                 ->rules('required'),
 
             Text::make('Status')
@@ -183,18 +184,5 @@ class Payout extends Resource
     public function actions(Request $request)
     {
         return [];
-    }
-
-    /**
-     * Build an "index" query for the given resource.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest $request
-     * @param  \Illuminate\Database\Eloquent\Builder   $query
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function indexQuery(NovaRequest $request, $query)
-    {
-        return $request->user()->isAdmin() ? $query : $query->where('user_id', $request->user()->id);
     }
 }

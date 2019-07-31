@@ -11,13 +11,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
-use Laravel\Nova\Actions\Actionable;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Actionable,
-        Notifiable,
+    use Notifiable,
         HasApiTokens,
         HasManyShops,
         HasManyCommissions,
@@ -89,9 +87,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getSettings($keys = '*', $fresh = false)
     {
-        $cacheKey = 'user_setting_' . ($this->id ?? 0);
+        $cacheKey = 'user_' . ($this->id ?? 0) . '_setting';
 
-        if ($fresh) {
+        if ($fresh || $this->id) {
             \Cache::forget($cacheKey);
         }
 

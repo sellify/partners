@@ -125,4 +125,14 @@ class UserSetting extends Resource
             : $query->where('user_id', $request->user()
                 ->id);
     }
+
+    /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+        return 'Settings';
+    }
 }

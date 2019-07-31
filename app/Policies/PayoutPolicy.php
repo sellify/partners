@@ -27,7 +27,7 @@ class PayoutPolicy
 
     public function viewAny(User $user)
     {
-        return true;
+        return $user->isAdmin();
     }
 
     public function create(User $user)

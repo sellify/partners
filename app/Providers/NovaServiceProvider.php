@@ -17,6 +17,7 @@ use Laravel\Nova\Nova;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\NovaApplicationServiceProvider;
 use Llaski\NovaScheduledJobs\NovaScheduledJobsTool;
+use Niveshsaharan\LaravelPassport\LaravelPassport;
 use Spatie\BackupTool\BackupTool;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -102,6 +103,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 return $request->user()->isAdmin();
             }),
             (new BackupTool())->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
+            (new LaravelPassport())->canSee(function ($request) {
                 return $request->user()->isAdmin();
             }),
             (new NovaScheduledJobsTool())->canSee(function ($request) {

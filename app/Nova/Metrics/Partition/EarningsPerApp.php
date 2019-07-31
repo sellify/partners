@@ -37,17 +37,25 @@ class EarningsPerApp extends Partition
     public function calculate(Request $request)
     {
         $model = Earning::query();
+        $column = 'earnings.amount';
 
         if ($request->resourceId) {
             $model->where($this->resourceColumn, $request->resourceId);
         }
 
+        if (!$request->user()->isAdmin()) {
+            $model->join('commissions', 'commissions.earning_id', '=', 'earnings.id')
+                  ->where('commissions.user_id', $request->user()->id);
+
+            $column = 'commissions.amount';
+        }
+
         $apps = (new App())->getApps();
 
-        $partition = $this->sum($request, $model, 'amount', 'app_id');
+        $partition = $this->sum($request, $model, $column, 'earnings.app_id');
 
         $partition->value = collect($apps)->mapWithKeys(function ($app) use ($partition) {
-            return [$app['name'] => ($partition->value[$app['id']] ?? 0) / 100];
+            return [$app['name'] => floor(($partition->value[$app['id']] ?? 0) / 100)];
         })->toArray();
 
         return $partition;

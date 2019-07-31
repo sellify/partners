@@ -15,6 +15,13 @@ use Laravel\Nova\Http\Requests\LensRequest;
 class UsersPayableCommissions extends Lens
 {
     /**
+     * The displayable name of the lens.
+     *
+     * @var string
+     */
+    public $name = 'Payable Commissions';
+
+    /**
      * Get the query builder / paginator for the lens.
      *
      * @param  \Laravel\Nova\Http\Requests\LensRequest  $request
@@ -32,6 +39,9 @@ class UsersPayableCommissions extends Lens
                     ->orWhereNull('commissions.payout_id');
             })
             ->where('earnings.payout_date', '<=', Carbon::now())
+            ->when(!$request->user()->isAdmin(), function ($query) use ($request) {
+                return $query->where('commissions.user_id', $request->user()->id);
+            })
             ->orderBy('amount', 'desc')
             ->groupBy('commissions.user_id')
             ->having('amount', '>=', DB::raw('users.minimum_payout'))
@@ -93,7 +103,9 @@ class UsersPayableCommissions extends Lens
     public function actions(Request $request)
     {
         return [
-            new PayCommissions(),
+            (new PayCommissions())->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
         ];
     }
 

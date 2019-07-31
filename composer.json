@@ -20,6 +20,7 @@
         "laravel/tinker": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "llaski/nova-scheduled-jobs": "^1.6",
+        "niveshsaharan/laravel-passport": "*",
         "paypal/rest-api-sdk-php": "^1.14",
         "predis/predis": "^1.1",
         "spatie/nova-backup-tool": "^3.0",
@@ -78,6 +79,14 @@
         {
             "type": "git",
             "url": "git@github.com:niveshsaharan/laravel-nova.git"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/LaravelPassport"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/LaravelPassport"
         }
     ]
 }

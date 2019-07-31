@@ -185,12 +185,13 @@ class User extends Resource
                     ->hideFromIndex()
                     ->hideWhenCreating()
                     ->hideWhenUpdating(),
+
+            HasMany::make('Shops'),
+            HasMany::make('Commissions'),
         ];
 
         if ($request->user()->isAdmin()) {
             $fields = array_merge($fields, [
-                HasMany::make('Shops'),
-                HasMany::make('Commissions'),
                 Impersonate::make($this),
                 BelongsToMany::make('Settings')->fields(function () {
                     return [

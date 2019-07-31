@@ -13,8 +13,19 @@ class App extends Model
 {
     use HasManyShops, HasManyEarnings, HasManyCommissions;
 
-    protected $guarded = [
-    ];
+    /**
+     * Guarded columns
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
+     * Cache key
+     *
+     * @var string
+     */
+    public static $cacheKey = 'apps';
 
     /**
      * Apps
@@ -25,20 +36,18 @@ class App extends Model
      */
     public function getApps($fresh = false)
     {
-        $cacheKey = 'apps';
-
         if ($fresh) {
-            \Cache::forget($cacheKey);
+            \Cache::forget(self::$cacheKey);
         }
 
-        $formattedApps = Cache::get($cacheKey, function () use ($cacheKey) {
+        $formattedApps = Cache::get(self::$cacheKey, function () {
             $apps = self::select([
                 'id',
                 'name',
                 'slug',
             ])->get()->keyBy('id')->toArray();
 
-            Cache::add($cacheKey, $apps, now()->addDays(7));
+            Cache::add(self::$cacheKey, $apps, now()->addDays(7));
 
             return $apps;
         });

@@ -20,7 +20,11 @@ trait ResourceCommon
             $titleFields = is_array($titleFields) ? $titleFields : [$titleFields];
 
             foreach ($titleFields as $titleField) {
-                $title[] = $this->get_value($this, $titleField, $titleField);
+                $value = $this->get_value($this, $titleField, $titleField);
+                if ($titleField === 'shopify_domain') {
+                    $value = str_ireplace('.myshopify.com', '', $value);
+                }
+                $title[] = $value;
             }
 
             return implode('', $title);
@@ -41,7 +45,11 @@ trait ResourceCommon
             $titleFields = is_array($titleFields) ? $titleFields : [$titleFields];
 
             foreach ($titleFields as $titleField) {
-                $title[] = $this->get_value($this, $titleField, $titleField);
+                $value = $this->get_value($this, $titleField, $titleField);
+                if ($titleField === 'shopify_domain') {
+                    $value = str_ireplace('.myshopify.com', '', $value);
+                }
+                $title[] = $value;
             }
 
             return implode('', $title);

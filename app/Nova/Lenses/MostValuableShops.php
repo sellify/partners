@@ -23,9 +23,14 @@ class MostValuableShops extends Lens
     public static function query(LensRequest $request, $query)
     {
         return $request->withOrdering($request->withFilters(
-            $query->select(self::columns())
+            $query->select(self::columns($request))
                   ->join('earnings', 'earnings.shop_id', '=', 'shops.id')
+                    ->leftJoin('commissions', 'commissions.earning_id', '=', 'earnings.id')
                   ->where('earnings.app_id', DB::raw('shops.app_id'))
+                    ->when(!$request->user()->isAdmin(), function ($query) use ($request) {
+                        return $query->where('shops.user_id', $request->user()->id)
+                            ->where('commissions.user_id', $request->user()->id);
+                    })
                   ->orderBy('revenue', 'desc')
                   ->groupBy('shops.id', 'shops.app_id')
         ));
@@ -36,14 +41,14 @@ class MostValuableShops extends Lens
      *
      * @return array
      */
-    protected static function columns()
+    protected static function columns($request)
     {
         return [
             'shops.id',
             'shops.shopify_domain',
             'shops.app_id',
             'shops.user_id',
-            DB::raw('sum(earnings.amount) as revenue'),
+            $request->user()->isAdmin() ? DB::raw('sum(earnings.amount) as revenue') : DB::raw('sum(commissions.amount) as revenue'),
         ];
     }
 

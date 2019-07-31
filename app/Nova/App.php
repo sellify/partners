@@ -165,9 +165,7 @@ class App extends Resource
     {
         return [
             (new ShopsPerApp())->width('1/2'),
-            (new EarningsPerApp())->width('1/2')->canSee(function ($request) {
-                return $request->user()->isAdmin();
-            }),
+            (new EarningsPerApp())->width('1/2'),
             (new EarningsPerDay())->canSee(function ($request) {
                 return $request->user()->isAdmin();
             })->resourceColumn('app_id')->width('1/2')->onlyOnDetail(),
