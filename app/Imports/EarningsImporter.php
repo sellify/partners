@@ -18,7 +18,7 @@ class EarningsImporter implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         // All apps
-        $apps = App::select('id', 'name')->pluck('id', 'name')->toArray();
+        $apps = (new \App\App())->appsByNames(true);
         $shops = [];
 
         // Iterate over rows
@@ -34,7 +34,7 @@ class EarningsImporter implements ToCollection, WithHeadingRow
                 $row['category']
             )) {
                 // App id
-                $appId = $row['app_title'] && isset($apps[$row['app_title']]) ? $apps[$row['app_title']] : null;
+                $appId = $row['app_title'] && isset($apps[strtolower($row['app_title'])]) ? $apps[strtolower($row['app_title'])] : null;
 
                 if ($row['app_title'] && !$appId) {
                     // Create app
@@ -43,10 +43,11 @@ class EarningsImporter implements ToCollection, WithHeadingRow
                         'slug'         => '',
                         'url'          => '',
                         'appstore_url' => '',
-                        'price'        => ceil($row['partner_share'] * 1.2 * 100),
+                        'price'        => ceil($row['partner_share'] * 1.25 * 100),
                     ]);
 
                     $apps[$app->name] = $app->id;
+                    $apps[strtolower($app->name)] = $app->id;
                     $appId = $app->id;
                 }
 

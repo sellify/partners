@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2c430e8564dd8aa43bdfcfb650bda34",
+    "content-hash": "cbfaf8f43204e52ab7769b40548f783b",
     "packages": [
         {
             "name": "anaseqal/nova-import",
@@ -946,6 +946,47 @@
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
             "time": "2017-06-27T22:17:23+00:00"
+        },
+        {
+            "name": "fourstacks/nova-repeatable-fields",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fourstacks/nova-repeatable-fields.git",
+                "reference": "b89dc86dba6349023554f67c9ae6f580ee08287e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fourstacks/nova-repeatable-fields/zipball/b89dc86dba6349023554f67c9ae6f580ee08287e",
+                "reference": "b89dc86dba6349023554f67c9ae6f580ee08287e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fourstacks\\NovaRepeatableFields\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fourstacks\\NovaRepeatableFields\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "time": "2019-06-10T08:43:48+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

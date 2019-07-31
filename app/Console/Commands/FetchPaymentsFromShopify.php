@@ -67,7 +67,7 @@ class FetchPaymentsFromShopify extends Command
             }
 
             $this->info('The cookie is valid and authentication was successful.');
-            $this->apps = App::select('id', 'name')->pluck('id', 'name')->toArray();
+            $this->apps = (new \App\App())->appsByNames(true);
 
             if ($this->option('paid')) {
                 $this->info('Fetching paid payouts....');
@@ -113,7 +113,7 @@ class FetchPaymentsFromShopify extends Command
             $charge_type = preg_replace('/(?<=\\w)(?=[A-Z])/', ' $1', $earning->kind);
             $charge_type = trim($charge_type);
 
-            $appId = $this->apps[$earning->api_client_title] ?? null;
+            $appId = $this->apps[strtolower($earning->api_client_title)] ?? null;
 
             if ($earning->api_client_title && !$appId && Str::contains($charge_type, 'Application')) {
                 // Create app
@@ -122,10 +122,11 @@ class FetchPaymentsFromShopify extends Command
                     'slug'         => '',
                     'url'          => '',
                     'appstore_url' => '',
-                    'price'        => ceil($earning->total_price * 1.2 * 100),
+                    'price'        => ceil($earning->total_price * 1.25 * 100),
                 ]);
 
                 $this->apps[$app->name] = $app->id;
+                $this->apps[strtolower($app->name)] = $app->id;
                 $appId = $app->id;
             }
 

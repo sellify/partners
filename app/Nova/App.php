@@ -8,6 +8,7 @@ use App\Nova\Metrics\Trend\CommissionsPerDay;
 use App\Nova\Metrics\Trend\EarningsPerDay;
 use App\Nova\Metrics\Trend\EarningsPerPayout;
 use App\Nova\Metrics\Trend\ShopsPerDay;
+use Fourstacks\NovaRepeatableFields\Repeater;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -133,6 +134,17 @@ class App extends Resource
                 ->hideFromIndex(),
 
             Boolean::make('Active'),
+
+            Repeater::make('Other Names')
+                ->help('If the app was used to have different name in past. Shopify might give the earnings details with those names for the payouts during that period.')
+                ->addField([
+                'label'       => 'Name',
+                'type'        => 'text',
+                'placeholder' => 'My awesome App',
+            ])
+                ->addButtonText('Add another name')
+            ->initialRows(1)
+            ->hideFromIndex(),
 
             DateTime::make('Created At')
                     ->format('MMM, DD YYYY hh:mm A')

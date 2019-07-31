@@ -29,6 +29,14 @@ class App extends Model
     public static $cacheKey = 'apps';
 
     /**
+     * Cast columns
+     * @var array
+     */
+    protected $casts = [
+        'other_names' => 'array',
+    ];
+
+    /**
      * Apps
      *
      * @param boolean $fresh
@@ -47,6 +55,7 @@ class App extends Model
                 'name',
                 'slug',
                 'active',
+                'other_names',
             ])->get()->keyBy('id')->toArray();
 
             Cache::add(self::$cacheKey, $apps, now()->addDays(7));
@@ -68,5 +77,30 @@ class App extends Model
     public function app($id, $default = null, $fresh = false)
     {
         return Arr::get($this->getApps($fresh), $id, $default);
+    }
+
+    /**
+     * Apps key by name
+     *
+     * @param bool $fresh
+     *
+     * @return array
+     */
+    public function appsByNames($fresh = false)
+    {
+        $apps = $this->getApps($fresh);
+        $appsByName = [];
+        collect($apps)->each(function ($app) use (&$appsByName) {
+            $appsByName[$app['name']] = $app['id'];
+            $appsByName[strtolower($app['name'])] = $app['id'];
+            if ($app['other_names']) {
+                foreach ($app['other_names'] as $name) {
+                    $appsByName[$name['name']] = $app['id'];
+                    $appsByName[strtolower($name['name'])] = $app['id'];
+                }
+            }
+        });
+
+        return $appsByName;
     }
 }
