@@ -6,6 +6,7 @@ use App\Traits\Relations\HasMany\Commissions as HasManyCommissions;
 use App\Traits\Relations\HasMany\Shops as HasManyShops;
 use App\Traits\Relations\BelongsToMany\Settings as BelongsToManySettings;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,6 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable,
         HasApiTokens,
+        SoftDeletes,
         HasManyShops,
         HasManyCommissions,
         BelongsToManySettings;

@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->integer('minimum_payout')->default(2500);
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

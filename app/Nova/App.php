@@ -9,6 +9,7 @@ use App\Nova\Metrics\Trend\EarningsPerDay;
 use App\Nova\Metrics\Trend\EarningsPerPayout;
 use App\Nova\Metrics\Trend\ShopsPerDay;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -130,6 +131,8 @@ class App extends Resource
                   })
                   ->sortable()
                 ->hideFromIndex(),
+
+            Boolean::make('Active'),
 
             DateTime::make('Created At')
                     ->format('MMM, DD YYYY hh:mm A')

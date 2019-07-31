@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\Relations\HasMany\Shops as HasManyShops;
 use App\Traits\Relations\HasMany\Earnings as HasManyEarnings;
 use App\Traits\Relations\HasMany\Commissions as HasManyCommissions;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 
 class App extends Model
 {
-    use HasManyShops, HasManyEarnings, HasManyCommissions;
+    use SoftDeletes, HasManyShops, HasManyEarnings, HasManyCommissions;
 
     /**
      * Guarded columns
@@ -45,6 +46,7 @@ class App extends Model
                 'id',
                 'name',
                 'slug',
+                'active',
             ])->get()->keyBy('id')->toArray();
 
             Cache::add(self::$cacheKey, $apps, now()->addDays(7));
