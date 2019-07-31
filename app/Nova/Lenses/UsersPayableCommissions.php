@@ -4,8 +4,9 @@ namespace App\Nova\Lenses;
 
 use App\Nova\Actions\PayCommissions;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
@@ -32,20 +33,22 @@ class UsersPayableCommissions extends Lens
     {
         return $request->withOrdering($request->withFilters(
             $query->select(self::columns())
-            ->join('commissions', 'users.id', '=', 'commissions.user_id')
-            ->join('earnings', 'earnings.id', '=', 'commissions.earning_id')
-            ->where(function ($query) {
-                return $query->whereNull('commissions.paid_at')
-                    ->orWhereNull('commissions.payout_id');
-            })
-            ->where('earnings.payout_date', '<=', Carbon::now())
-            ->when(!$request->user()->isAdmin(), function ($query) use ($request) {
-                return $query->where('commissions.user_id', $request->user()->id);
-            })
-            ->orderBy('amount', 'desc')
-            ->groupBy('commissions.user_id')
-            ->having('amount', '>=', DB::raw('users.minimum_payout'))
-        ));
+                ->join('commissions', 'users.id', '=', 'commissions.user_id')
+                ->join('earnings', 'earnings.id', '=', 'commissions.earning_id')
+                ->when(!$request->user()->isAdmin(), function ($query) use ($request) {
+                    return $query->where('commissions.user_id', $request->user()->id);
+                })
+                ->where(function ($query) {
+                    return $query->whereNull('commissions.paid_at')
+                        ->orWhereNull('commissions.payout_id');
+                })
+                ->where('earnings.payout_date', '<=', Carbon::now())
+                ->orderBy('amount', 'desc')
+                ->groupBy('commissions.user_id')
+                ->when(!Str::endsWith($request->url(), '/count'), function ($query) {
+                    return $query->having('amount', '>=', DB::raw('users.minimum_payout'));
+                })
+          ));
     }
 
     /**
@@ -60,7 +63,7 @@ class UsersPayableCommissions extends Lens
             'users.username',
             'users.paypal_email',
             'users.minimum_payout',
-            DB::raw('sum(commissions.amount) as amount'),
+            \DB::raw('sum(commissions.amount) as amount'),
         ];
     }
 

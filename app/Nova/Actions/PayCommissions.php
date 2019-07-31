@@ -8,6 +8,7 @@ use App\Services\PayPal\CommissionsPayouts;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
@@ -77,6 +78,9 @@ class PayCommissions extends Action
 
                 return Action::message($updatedCommissionsCount . ' commissions with a total amount of $' . ($payableCommissionsDetails->sum('amount') / 100) . ' are being proceed. The current status is ' . $payout->status . '.');
             } catch (PayPalConnectionException $pce) {
+                Log::critical($pce->getData());
+                Log::critical($pce->getMessage());
+
                 return Action::danger($pce->getMessage());
             }
         } else {

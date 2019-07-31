@@ -23,6 +23,10 @@ class CommissionsPayouts
             )
         );
 
+        $apiContext->setConfig([
+            'mode' => config('services.paypal.mode') === 'sandbox' ? 'sandbox' : 'live',
+        ]);
+
         return $apiContext;
     }
 
@@ -59,7 +63,8 @@ class CommissionsPayouts
             $item->setRecipientType('Email');
             $item->setNote((new User())->setting('commissions.payout_note', 'Commissions Payout'))
                  ->setReceiver($payableCommission->paypal_email)
-                 ->setAmount((new \PayPal\Api\Currency())->setCurrency('USD')->setValue($payableCommission->amount / 100));
+                 ->setAmount((new \PayPal\Api\Currency())->setCurrency('USD')->setValue($payableCommission->amount / 100))
+                 ->setSenderItemId($payableCommission->id);
 
             $payouts->addItem($item);
         }

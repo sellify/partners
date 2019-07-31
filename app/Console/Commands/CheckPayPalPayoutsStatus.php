@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Payout;
 use App\Services\PayPal\CommissionsPayouts;
+use App\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use PayPal\Exception\PayPalConnectionException;
 
 class CheckPayPalPayoutsStatus extends Command
@@ -62,16 +64,31 @@ class CheckPayPalPayoutsStatus extends Command
                     // Iterate over items
                     foreach ($payoutBatch->getItems() as $item) {
                         // Update the commissions associated with this payout
-                        $payout->commissions()
-                               ->join('users', 'commissions.user_id', '=', 'users.id')
-                               ->where('paypal_email', $item->getPayoutItem()->getReceiver())
+                        $totalPaidCount = $payout->commissions()
+                                ->where('commissions.user_id', $item->getPayoutItem()->getSenderItemId())
                                ->update([
                                    'transaction_status' => $item->getTransactionStatus(),
                                    'transaction_id'     => $item->getTransactionId(),
                                ]);
+
+                        $user = User::where('id', $item->getPayoutItem()->getSenderItemId())->first();
+
+                        if ($totalPaidCount > 0 && $user && $user->setting('user.successful_payout_email')) {
+                            $user->notify(new \App\Notifications\CommissionsPaid([
+                                'receiver'           => $item->getPayoutItem()->getReceiver(),
+                                'type'               => $item->getPayoutItem()->getRecipientType(),
+                                'amount'             => $item->getPayoutItem()->getAmount()->getValue() . ' ' . $item->getPayoutItem()->getAmount()->getCurrency(),
+                                'note'               => $item->getPayoutItem()->getNote(),
+                                'count'              => $totalPaidCount,
+                                'transaction_status' => $item->getTransactionStatus(),
+                                'transaction_id'     => $item->getTransactionId(),
+                            ]));
+                        }
                     }
-                } catch (PayPalConnectionException $ppc) {
-                    $this->output->error($ppc->getMessage());
+                } catch (PayPalConnectionException $pce) {
+                    Log::critical($pce->getData());
+                    Log::critical($pce->getMessage());
+                    $this->output->error($pce->getMessage());
                 }
 
                 $bar->advance();

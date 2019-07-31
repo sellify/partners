@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -54,16 +55,30 @@ class CheckPayPalPendingPayoutsStatus implements ShouldQueue
                     // Iterate over items
                     foreach ($payoutBatch->getItems() as $item) {
                         // Update the commissions associated with this payout
-                        $payout->commissions()
-                               ->join('users', 'commissions.user_id', '=', 'users.id')
-                               ->where('paypal_email', $item->getPayoutItem()->getReceiver())
-                               ->update([
-                                   'transaction_status' => $item->getTransactionStatus(),
-                                   'transaction_id'     => $item->getTransactionId(),
-                               ]);
+                        $totalPaidCount = $payout->commissions()
+                             ->where('commissions.user_id', $item->getPayoutItem()->getSenderItemId())
+                             ->update([
+                                 'transaction_status' => $item->getTransactionStatus(),
+                                 'transaction_id'     => $item->getTransactionId(),
+                             ]);
+
+                        $user = User::where('id', $item->getPayoutItem()->getSenderItemId())->first();
+
+                        if ($totalPaidCount > 0 && $user && $user->setting('user.successful_payout_email')) {
+                            $user->notify(new \App\Notifications\CommissionsPaid([
+                                    'receiver'           => $item->getPayoutItem()->getReceiver(),
+                                    'type'               => $item->getPayoutItem()->getRecipientType(),
+                                    'amount'             => $item->getPayoutItem()->getAmount()->getValue() . ' ' . $item->getPayoutItem()->getAmount()->getCurrency(),
+                                    'note'               => $item->getPayoutItem()->getNote(),
+                                    'count'              => $totalPaidCount,
+                                    'transaction_status' => $item->getTransactionStatus(),
+                                    'transaction_id'     => $item->getTransactionId(),
+                                ]));
+                        }
                     }
-                } catch (PayPalConnectionException $ppc) {
-                    Log::critical($ppc->getMessage());
+                } catch (PayPalConnectionException $pce) {
+                    Log::critical($pce->getData());
+                    Log::critical($pce->getMessage());
                 }
             }
         }

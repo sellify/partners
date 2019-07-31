@@ -3,31 +3,30 @@
 namespace App\Notifications;
 
 use App\Email;
-use App\Shop;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class SuccessfulReferral extends Notification implements ShouldQueue
+class CommissionsPaid extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
-     * The referred shop
+     * The data
      *
-     * @var Shop $shop
+     * @var array $data
      */
-    public $shop;
+    public $data;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Shop $shop)
+    public function __construct($data)
     {
-        $this->shop = $shop;
+        $this->data = $data;
     }
 
     /**
@@ -56,7 +55,13 @@ class SuccessfulReferral extends Notification implements ShouldQueue
         return (new MailMessage())
             ->subject($template['subject'])
             ->line($template['body'])
-            ->action('Visit details page', url(config('nova.path') . '/resources/shops/' . $this->shop->id));
+            ->line('Receiver: ' . $this->data['receiver'])
+            ->line('Total Amount: ' . $this->data['amount'])
+            ->line('Total commissions: ' . $this->data['count'])
+            ->line('Status: ' . $this->data['transaction_status'])
+            ->line('Transaction ID: ' . $this->data['transaction_id'])
+            ->line('Note: ' . $this->data['note'])
+            ->action('Visit commissions page', url(config('nova.path') . '/resources/commissions'));
     }
 
     /**
@@ -80,8 +85,8 @@ class SuccessfulReferral extends Notification implements ShouldQueue
     private function getTemplate($user)
     {
         $data = [
-            'subject' => 'Congratulations! Someone you referred just signed up',
-            'body'    => $this->shop->shopify_domain . ' has installed "' . $this->shop->app->name . '" and you will earn your ' . $user->commission . '% commission when they\'re charged.',
+            'subject' => 'Congratulations! Your referral commission paid successfully.',
+            'body'    => 'You have received a total payout of ' . $this->data['amount'] . ' for ' . $this->data['count'] . ' eligible commissions.',
         ];
 
         return $data;

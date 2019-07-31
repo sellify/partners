@@ -59,7 +59,7 @@ class Setting extends Resource
             Text::make('Name')->rules(['required']),
             Text::make('Label')->rules(['required'])->hideFromIndex(),
             Text::make('Value')->hideFromIndex(),
-            Textarea::make('Description')->hideFromIndex(),
+            Textarea::make('Description')->rules(['required'])->hideFromIndex(),
             Select::make('Type')->options([
                 'BOOLEAN'    => 'Boolean',
                 'TEXT'       => 'Text',
@@ -68,7 +68,7 @@ class Setting extends Resource
                 'JSON'       => 'JSON',
                 'CODE'       => 'Code',
             ])->rules(['required']),
-            Text::make('Placeholder')->hideFromIndex(),
+            Text::make('Placeholder')->rules(['required'])->hideFromIndex(),
             Code::make('metadata')->json()->hideFromIndex(),
             Boolean::make('Editable', 'is_editable')->hideFromIndex(),
 

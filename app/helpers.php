@@ -76,6 +76,7 @@ if (!function_exists('app_setting')) {
         if ($type === 'INT' || $type === 'NUMBER') {
             $value = (int)$value;
         } elseif ($type == 'BOOLEAN') {
+            $value = $value === 'true' ? 1 : $value;
             $value = (int)$value;
             $value = $value ? true : false;
         } elseif ($type == 'JSON') {
