@@ -30,6 +30,12 @@ class Kernel extends ConsoleKernel
 
         // Check and update PayPal batch payout status
         $schedule->job(new CheckPayPalPendingPayoutsStatus())->dailyAt('03:00')->withoutOverlapping();
+
+        // Prune telescope data
+        $schedule->command('telescope:prune --hours=72')->dailyAt('03:05');
+
+        // Horizon snapshot
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
     /**
