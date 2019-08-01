@@ -39,7 +39,10 @@ class PayCommission extends Action
         if ($payout) {
             foreach ($models as $model) {
                 if (!$model->paid_at) {
+                    $model->payout_id = $payout->id;
                     $model->paid_at = $payout->payout_at;
+                    $model->transaction_id = $payout->transaction_id;
+                    $model->transaction_status = $payout->status;
                     $model->save();
                     $totalUpdated++;
                     $this->markAsFinished($model);
