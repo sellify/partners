@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ea078854af00fb6585f837eaadcac7b",
+    "content-hash": "7036598cfa5e3ef297691cc4b9526a23",
     "packages": [
         {
             "name": "anaseqal/nova-import",
@@ -800,6 +800,47 @@
                 "validator"
             ],
             "time": "2019-07-19T20:52:08+00:00"
+        },
+        {
+            "name": "epartment/nova-dependency-container",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/epartment/nova-dependency-container.git",
+                "reference": "65d3205509321b6fd04dd242e3e929b1183c82a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/epartment/nova-dependency-container/zipball/65d3205509321b6fd04dd242e3e929b1183c82a0",
+                "reference": "65d3205509321b6fd04dd242e3e929b1183c82a0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Epartment\\NovaDependencyContainer\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Epartment\\NovaDependencyContainer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field container allowing to depend on other fields values",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "time": "2019-04-04T14:11:55+00:00"
         },
         {
             "name": "ericlagarda/novalinkresource",

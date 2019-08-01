@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -75,7 +76,8 @@ class RegisterController extends Controller
 
         if ($user->id === 1) {
             $user->update([
-                'user_type' => 'super',
+                'user_type'         => 'super',
+                'email_verified_at' => Carbon::now(),
             ]);
         }
 

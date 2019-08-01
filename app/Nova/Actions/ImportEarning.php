@@ -3,6 +3,7 @@
 namespace App\Nova\Actions;
 
 use App\Imports\EarningsImporter;
+use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Bus\Queueable;
 use Anaseqal\NovaImport\Actions\Action;
 use Illuminate\Support\Facades\Artisan;
@@ -12,6 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Textarea;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -49,26 +51,27 @@ class ImportEarnings extends Action
      */
     public function handle(ActionFields $fields)
     {
-        if ($fields->file) {
-            Excel::import(new EarningsImporter(), $fields->file);
+        if ($fields->file && $fields->import_type === 'csv') {
+            Excel::import(new EarningsImporter(), $fields->csv_file);
 
             return Action::message('Import complete');
-        } elseif ($fields->cookie) {
-            if ($this->auth($fields->account_id, $fields->cookie)) {
+        } elseif ($fields->partners_cookie && $fields->import_type === 'api') {
+            if ($this->auth($fields->account_id, $fields->partners_cookie)) {
                 Artisan::queue('shopify:fetch_payments', [
-                    'cookie'    => $fields->cookie,
+                    'cookie'    => $fields->partners_cookie,
                     'id'        => $fields->account_id,
                     '--pending' => !!$fields->pending,
                     '--paid'    => !!$fields->paid,
+                    'limit'     => $fields->limit,
                 ]);
 
-                return Action::message('The command is added to queue. It will be process shortly.');
+                return Action::message('The earnings are being imported. It may take a while to complete.');
             } else {
                 return Action::danger($this->message ?? 'The auth with Shopify Partners was failed. Please check your cookie or account ID.');
             }
         }
 
-        return Action::danger('Please provide one of CSV file or Cookies.');
+        return Action::danger('Please provide one of CSV file or Cookie.');
     }
 
     /**
@@ -79,19 +82,43 @@ class ImportEarnings extends Action
     public function fields()
     {
         return [
-            File::make('CSV File', 'file')
-                ->help('Note: Import only csv file generated from Shopify Partners -> Payout -> Export payouts as CSV'),
+            Select::make('Import Type')->options([
+                'csv' => 'CSV file',
+                'api' => 'Shopify Partners Account',
+            ])->rules('required'),
 
-            Textarea::make('Cookie', 'cookie')
-                    ->withMeta([
-                        'extraAttributes' => [
-                            'placeholder' => 'master_device_id=c489454c-cb09-4e94-9b9a-64e5da299bca;......................._gat__other=1',
-                        ],
-                    ])
-                    ->help('Paste your Shopify Parteners cookie here if you want to pull from API.'),
-            Number::make('Partners Account ID', 'account_id'),
-            Boolean::make('Pending'),
-            Boolean::make('Paid'),
+            NovaDependencyContainer::make([
+                File::make('CSV File', 'csv_file')
+                    ->help('Note: Import only csv file generated from Shopify Partners -> Payout -> Export payouts as CSV'),
+            ])->dependsOn('import_type', 'csv'),
+
+            NovaDependencyContainer::make([
+                Number::make('Partners Account ID', 'account_id')
+                    ->help('Copy it from your partners url. For eg. if you partners account url looks like https://partners.shopify.com/3223222/payments then 3223222 is the account ID')
+                      ->rules('required'),
+                Textarea::make('Shopify Partners Cookie', 'partners_cookie')
+                        ->withMeta([
+                            'extraAttributes' => [
+                                'placeholder' => 'master_device_id=c489454c-cb09-4e94-9b9a-64e5da299bca;......................._gat__other=1',
+                            ],
+                        ])
+                        ->help('Paste your Shopify Partners cookie here. You can get it by visiting your partners account -> Open developers tool -> refresh the page -> Got to Networks tab -> Copy copy cookie from one of request header')
+                ->rules('required'),
+
+                Boolean::make('Import Pending Earnings', 'pending')->withMeta([
+                    'value' => true,
+                ]),
+                Boolean::make('Import Previous Earnings', 'paid'),
+
+                NovaDependencyContainer::make([
+                Number::make('Number of Previous Payouts to Fetch', 'limit')
+                      ->min(0)
+                      ->help('If you need to pull all records, enter 0')
+                      ->withMeta([
+                          'value' => 1,
+                      ]),
+                    ])->dependsOn('paid', true),
+            ])->dependsOn('import_type', 'api'),
         ];
     }
 

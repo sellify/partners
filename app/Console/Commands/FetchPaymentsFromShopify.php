@@ -7,6 +7,7 @@ use App\Events\EarningAdded;
 use App\Shop;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class FetchPaymentsFromShopify extends Command
@@ -96,6 +97,8 @@ class FetchPaymentsFromShopify extends Command
 
             // [Event]
             event(new EarningAdded());
+
+            Log::info('Earnings import complete');
         }
     }
 
