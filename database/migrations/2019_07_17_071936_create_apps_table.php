@@ -20,7 +20,7 @@ class CreateAppsTable extends Migration
             $table->text('url');
             $table->text('appstore_url');
             $table->integer('price');
-            $table->json('other_names')->nullable()->default(json_encode([]));
+            $table->json('other_names')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
             $table->softDeletes();
