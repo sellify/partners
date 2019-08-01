@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "cbfaf8f43204e52ab7769b40548f783b",
+    "content-hash": "3ea078854af00fb6585f837eaadcac7b",
     "packages": [
         {
             "name": "anaseqal/nova-import",
@@ -800,6 +800,50 @@
                 "validator"
             ],
             "time": "2019-07-19T20:52:08+00:00"
+        },
+        {
+            "name": "ericlagarda/novalinkresource",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:niveshsaharan/NovaLinkResource.git",
+                "reference": "6421b2f849e3fb72aa374ee581472383667cf612"
+            },
+            "require": {
+                "laravel/nova": "*",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "EricLagarda\\NovaLinkResource\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "EricLagarda\\NovaLinkResource\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eric Lagarda",
+                    "email": "eric@infinety.es",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Custom links on your sidebar for Laravel Nova.",
+            "homepage": "https://github.com/Krato/NovaLinkResource",
+            "keywords": [
+                "laravel",
+                "link",
+                "nova"
+            ],
+            "time": "2019-08-01T05:57:07+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -2324,6 +2368,60 @@
             "time": "2019-07-16T08:40:48+00:00"
         },
         {
+            "name": "mad-web/nova-telescope-link",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mad-web/nova-telescope-link.git",
+                "reference": "b0c6bc7e3f1fd7b23a2df715288144d009f790e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mad-web/nova-telescope-link/zipball/b0c6bc7e3f1fd7b23a2df715288144d009f790e1",
+                "reference": "b0c6bc7e3f1fd7b23a2df715288144d009f790e1",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/nova": "*",
+                "laravel/telescope": "^1.0|^2.0",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "MadWeb\\NovaTelescopeLink\\LinkServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MadWeb\\NovaTelescopeLink\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mad Web",
+                    "role": "Developer",
+                    "email": "madweb.dev@gmail.com",
+                    "homepage": "https://github.com/mad-web"
+                }
+            ],
+            "description": "Smart Link for Laravel Nova to Telescope Debug Assistant.",
+            "homepage": "https://github.com/mad-web/nova-telescope-link",
+            "keywords": [
+                "laravel",
+                "link",
+                "nova",
+                "telescope"
+            ],
+            "time": "2019-04-30T10:37:41+00:00"
+        },
+        {
             "name": "markbaker/complex",
             "version": "1.4.7",
             "source": {
@@ -2790,14 +2888,21 @@
         },
         {
             "name": "niveshsaharan/laravel-passport",
-            "version": "dev-development",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/niveshsaharan/nova-laravel-passport.git",
+                "reference": "ed616aa4f83b1efd78d842ade41e225af01afedb"
+            },
             "dist": {
-                "type": "path",
-                "url": "./nova-components/LaravelPassport",
-                "reference": "d6cda844f421045a139ab9d65f5a8f942fe4b666",
-                "shasum": null
+                "type": "zip",
+                "url": "https://api.github.com/repos/niveshsaharan/nova-laravel-passport/zipball/ed616aa4f83b1efd78d842ade41e225af01afedb",
+                "reference": "ed616aa4f83b1efd78d842ade41e225af01afedb",
+                "shasum": ""
             },
             "require": {
+                "laravel/nova": "^2.0",
+                "laravel/passport": "^7.3",
                 "php": ">=7.1.0"
             },
             "type": "library",
@@ -2813,14 +2918,16 @@
                     "Niveshsaharan\\LaravelPassport\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "description": "A Laravel Nova tool.",
+            "description": "Laravel Passport Tool for Nova",
             "keywords": [
                 "laravel",
                 "nova"
-            ]
+            ],
+            "time": "2019-08-01T06:13:52+00:00"
         },
         {
             "name": "opis/closure",
@@ -7504,7 +7611,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "niveshsaharan/laravel-passport": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
