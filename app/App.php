@@ -80,27 +80,27 @@ class App extends Model
     }
 
     /**
-     * Apps key by name
+     * Apps key by
      *
      * @param bool $fresh
      *
      * @return array
      */
-    public function appsByNames($fresh = false)
+    public function appsBy($key = 'name', $fresh = false)
     {
         $apps = $this->getApps($fresh);
-        $appsByName = [];
-        collect($apps)->each(function ($app) use (&$appsByName) {
-            $appsByName[$app['name']] = $app['id'];
-            $appsByName[strtolower($app['name'])] = $app['id'];
-            if ($app['other_names']) {
+        $appsByKey = [];
+        collect($apps)->each(function ($app) use (&$appsByKey, $key) {
+            $appsByKey[$app[$key]] = $app['id'];
+            $appsByKey[strtolower($app[$key])] = $app['id'];
+            if ($key === 'name' && $app['other_names']) {
                 foreach ($app['other_names'] as $name) {
-                    $appsByName[$name['name']] = $app['id'];
-                    $appsByName[strtolower($name['name'])] = $app['id'];
+                    $appsByKey[$name[$key]] = $app['id'];
+                    $appsByKey[strtolower($name[$key])] = $app['id'];
                 }
             }
         });
 
-        return $appsByName;
+        return $appsByKey;
     }
 }

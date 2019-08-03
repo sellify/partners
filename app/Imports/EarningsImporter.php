@@ -18,7 +18,7 @@ class EarningsImporter implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         // All apps
-        $apps = (new \App\App())->appsByNames(true);
+        $apps = (new \App\App())->appsBy('name', true);
         $shops = [];
 
         // Iterate over rows

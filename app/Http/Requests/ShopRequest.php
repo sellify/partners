@@ -25,15 +25,12 @@ class ShopRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules($values = [])
     {
         return [
             'app_id' => [
                 'required',
-                Rule::exists((new App())->getTable(), (new App())->getKeyName())
-                ->where(function ($query) {
-                    $query->where('user_id', $this->user()->id);
-                }),
+                Rule::exists((new App())->getTable(), (new App())->getKeyName()),
             ],
             'user_id' => [
                 'required',
@@ -42,19 +39,19 @@ class ShopRequest extends FormRequest
             'shopify_domain' => [
                 'required',
                 Rule::unique((new Shop())->getTable(), 'shopify_domain')
-                    ->where(function ($query) {
-                        $query->where('app_id', $this->request->get('app_id'));
-                    })
-            ]
+                    ->where(function ($query) use ($values) {
+                        $query->where('app_id', isset($values['app_id']) ? $values['app_id'] : $this->request->get('app_id'));
+                    }),
+            ],
         ];
     }
 
     public function messages()
     {
         return [
-            'app_id.exists' => "The app doesn't exists or you're not the owner.",
-            'user_id.exists' => "This affiliate doesn't exists.",
-            'shopify_domain.unique' => "This shop is already referred for the selected app."
+            'app_id.exists'         => "The app doesn't exists or you're not the owner.",
+            'user_id.exists'        => "This affiliate doesn't exists.",
+            'shopify_domain.unique' => 'This shop is already referred for the selected app.',
         ];
     }
 }

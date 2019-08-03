@@ -36,6 +36,9 @@ class Kernel extends ConsoleKernel
 
         // Horizon snapshot
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
+
+        // Fetch affiliates in last n days
+        $schedule->command('fetch:affiliates')->dailyAt('03:07');
     }
 
     /**

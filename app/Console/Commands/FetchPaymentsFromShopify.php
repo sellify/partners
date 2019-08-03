@@ -68,7 +68,7 @@ class FetchPaymentsFromShopify extends Command
             }
 
             $this->info('The cookie is valid and authentication was successful.');
-            $this->apps = (new \App\App())->appsByNames(true);
+            $this->apps = (new \App\App())->appsBy('name', true);
 
             if ($this->option('paid')) {
                 $this->info('Fetching paid payouts....');
