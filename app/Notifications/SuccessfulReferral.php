@@ -56,7 +56,7 @@ class SuccessfulReferral extends Notification implements ShouldQueue
         return (new MailMessage())
             ->subject($template['subject'])
             ->line($template['body'])
-            ->action('Visit details page', url(config('nova.path') . '/resources/shops/' . $this->shop->id));
+            ->action('Visit details page', url(config('nova.path') . 'resources/shops/' . $this->shop->id));
     }
 
     /**

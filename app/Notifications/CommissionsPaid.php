@@ -61,7 +61,7 @@ class CommissionsPaid extends Notification implements ShouldQueue
             ->line('Status: ' . $this->data['transaction_status'])
             ->line('Transaction ID: ' . $this->data['transaction_id'])
             ->line('Note: ' . $this->data['note'])
-            ->action('Visit commissions page', url(config('nova.path') . '/resources/commissions'));
+            ->action('Visit commissions page', url(config('nova.path') . 'resources/commissions'));
     }
 
     /**
