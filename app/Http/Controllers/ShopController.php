@@ -10,11 +10,7 @@ class ShopController extends Controller
 {
     public function store(ShopRequest $request)
     {
-        $shop = Shop::create([
-            'user_id'        => $request->get('user_id'),
-            'app_id'         => $request->get('app_id'),
-            'shopify_domain' => $request->get('shopify_domain'),
-        ]);
+        $shop = Shop::create($request->validated());
 
         return new ShopResource($shop);
     }
