@@ -72,7 +72,8 @@ class PayCommission extends Action
         return [
             Select::make('Payout', 'payout_id')
             ->options(Payout::all()->pluck('title', 'id')->toArray())
-            ->help('Commissions can only be marked paid when you attach to a payout.'),
+            ->help('Commissions can only be marked paid when you attach to a payout.')
+            ->rules('required'),
         ];
     }
 }

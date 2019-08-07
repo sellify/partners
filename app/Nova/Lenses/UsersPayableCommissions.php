@@ -108,6 +108,8 @@ class UsersPayableCommissions extends Lens
         return [
             (new PayCommissions())->canSee(function ($request) {
                 return $request->user()->isAdmin();
+            })->canRun(function ($request) {
+                return $request->user()->isAdmin();
             }),
         ];
     }

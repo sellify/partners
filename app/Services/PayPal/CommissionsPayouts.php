@@ -9,6 +9,35 @@ use PayPal\Api\PayoutItem;
 class CommissionsPayouts
 {
     /**
+     * @var string Client Id
+     */
+    private $clientId;
+
+    /**
+     * @var string Client secret
+     */
+    private $clientSecret;
+
+    /**
+     * @var string mode
+     */
+    private $mode;
+
+    /**
+     * CommissionsPayouts constructor.
+     *
+     * @param        $clientId
+     * @param        $clientSecret
+     * @param string $mode
+     */
+    public function __construct($clientId, $clientSecret, $mode = 'live')
+    {
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->mode = $mode === 'sandbox' ? 'sandbox' : 'live';
+    }
+
+    /**
      * Api credentials
      *
      * @return \PayPal\Rest\ApiContext
@@ -18,13 +47,13 @@ class CommissionsPayouts
         // Api context
         $apiContext = new \PayPal\Rest\ApiContext(
             new \PayPal\Auth\OAuthTokenCredential(
-                config('services.paypal.client_id'), // ClientID
-                config('services.paypal.client_secret') // ClientSecret
+                $this->clientId, // ClientID
+                $this->clientSecret // ClientSecret
             )
         );
 
         $apiContext->setConfig([
-            'mode' => config('services.paypal.mode') === 'sandbox' ? 'sandbox' : 'live',
+            'mode' => $this->mode,
         ]);
 
         return $apiContext;
