@@ -54,4 +54,36 @@ class ShopRequest extends FormRequest
             'shopify_domain.unique' => 'This shop is already referred for the selected app.',
         ];
     }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $data = [];
+        if (($this->json('app') && !$this->json('app_id')) || ($this->get('app') && !$this->get('app_id'))) {
+            $apps = (new \App\App())->appsBy('slug', true);
+
+            $appId = $apps[$this->json('app') ?? $this->get('app')] ?? null;
+
+            $data['app_id'] = $appId;
+        }
+
+        if (($this->json('username') && !$this->json('user_id')) || ($this->get('username') && !$this->get('user_id'))) {
+            $referrer = User::whereUsername($this->json('username') ?? $this->get('username'))->first();
+
+            if ($referrer) {
+                $userId = $referrer->id;
+                $data['user_id'] = $userId;
+            }
+        }
+
+        if ($this->json('shopify_domain') || $this->get('shopify_domain')) {
+            $data['shopify_domain'] = $this->json('shopify_domain') ?? $this->get('shopify_domain');
+        }
+
+        $this->merge($data);
+    }
 }
