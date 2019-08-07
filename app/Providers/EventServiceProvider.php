@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\EarningAdded;
+use App\Events\ShopInstalledApp;
 use App\Listeners\CalculateCommissions;
+use App\Listeners\NotifyReferrer;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         EarningAdded::class => [
             CalculateCommissions::class,
+        ],
+        ShopInstalledApp::class => [
+            NotifyReferrer::class,
         ],
     ];
 
