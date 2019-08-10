@@ -65,13 +65,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = User::create([
+        $data = [
             'name'         => $data['name'],
             'email'        => $data['email'],
             'paypal_email' => $data['paypal_email'],
             'username'     => $data['username'],
             'password'     => Hash::make($data['password']),
-        ]);
+        ];
+
+        if ((new User())->setting('user.commission')) {
+            $user['commission'] = (new User())->setting('user.commission');
+        }
+
+        if ((new User())->setting('user.minimum_payout')) {
+            $user['minimum_payout'] = (new User())->setting('user.minimum_payout');
+        }
+
+        $user = User::create($data);
 
         if ($user->id === 1) {
             $user->user_type = 'super';
