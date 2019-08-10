@@ -7,6 +7,7 @@ use App\Events\EarningAdded;
 use App\Shop;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -59,6 +60,14 @@ class FetchPaymentsFromShopify extends Command
         $this->accountId = $this->argument('id');
         $this->cookie = $this->argument('cookie');
         $this->limit = (int) $this->argument('limit');
+
+        if (!$this->accountId) {
+            $this->accountId = Cache::get('shopify_partners_id', '');
+        }
+
+        if (!$this->cookie) {
+            $this->cookie = Cache::get('shopify_partners_cookie', '');
+        }
 
         if ($this->accountId && $this->cookie) {
             if (!$this->auth()) {
@@ -163,7 +172,8 @@ class FetchPaymentsFromShopify extends Command
                 Str::contains($charge_type, 'Affiliate') ? 'Affiliate fee' : 'Other'
                 )
                 ),
-                'theme_name'        => Str::contains($charge_type, 'Theme') ? $earning->api_client_title : null,
+                'theme_name'         => Str::contains($charge_type, 'Theme') ? $earning->api_client_title : null,
+                'shopify_earning_id' => $earning->id,
             ];
 
             $payoutPeriod = $payment->name ?? null;

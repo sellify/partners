@@ -37,28 +37,54 @@ class Earning extends Model
     {
         $data['shop_id'] = $data['shop_id'] ?? $query->getBindings()[0];
 
-        $earning = self::updateOrCreate(
-            [
-                'shop_id'           => $data['shop_id'],
-                'app_id'            => $data['app_id'],
-                'charge_created_at' => $data['charge_created_at'],
-                'charge_type'       => $data['charge_type'],
-                'payout_date'       => $data['payout_date'],
-                'amount'            => $data['amount'],
-            ],
-            [
-                'start_date'        => $data['start_date'] ?? null,
-                'end_date'          => $data['end_date'] ?? null,
-                'payout_date'       => $data['payout_date'],
-                'shop_id'           => $data['shop_id'],
-                'app_id'            => $data['app_id'],
-                'amount'            => $data['amount'],
-                'charge_created_at' => $data['charge_created_at'],
-                'charge_type'       => $data['charge_type'],
-                'category'          => $data['category'] ?? null,
-                'theme_name'        => $data['theme_name'] ?? null,
-            ]
-        );
+        $conditions = [
+            'shop_id'           => $data['shop_id'],
+            'app_id'            => $data['app_id'],
+            'charge_created_at' => $data['charge_created_at'],
+            'charge_type'       => $data['charge_type'],
+            'payout_date'       => $data['payout_date'],
+            'amount'            => $data['amount'],
+        ];
+
+        // Find if already exists
+        $earning = self::where($conditions)
+                      ->when(
+                            isset($data['shopify_earning_id']) && $data['shopify_earning_id'],
+                            function ($query) use ($data) {
+                                return $query->whereNull('shopify_earning_id')->orWhere('shopify_earning_id', $data['shopify_earning_id']);
+                            }
+                       )
+                       ->first();
+
+        if ($earning) {
+            $earning->update([
+                'start_date'         => $data['start_date'] ?? null,
+                'end_date'           => $data['end_date'] ?? null,
+                'payout_date'        => $data['payout_date'],
+                'shop_id'            => $data['shop_id'],
+                'app_id'             => $data['app_id'],
+                'amount'             => $data['amount'],
+                'charge_created_at'  => $data['charge_created_at'],
+                'charge_type'        => $data['charge_type'],
+                'category'           => $data['category'] ?? null,
+                'theme_name'         => $data['theme_name'] ?? null,
+                'shopify_earning_id' => $data['shopify_earning_id'] ?? $earning->shopify_earning_id,
+            ]);
+        } else {
+            $earning = self::create([
+                'start_date'                => $data['start_date'] ?? null,
+                'end_date'                  => $data['end_date'] ?? null,
+                'payout_date'               => $data['payout_date'],
+                'shop_id'                   => $data['shop_id'],
+                'app_id'                    => $data['app_id'],
+                'amount'                    => $data['amount'],
+                'charge_created_at'         => $data['charge_created_at'],
+                'charge_type'               => $data['charge_type'],
+                'category'                  => $data['category'] ?? null,
+                'theme_name'                => $data['theme_name'] ?? null,
+                'shopify_earning_id'        => $data['shopify_earning_id'] ?? null,
+            ]);
+        }
 
         return $earning;
     }

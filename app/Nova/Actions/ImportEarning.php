@@ -7,6 +7,7 @@ use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Bus\Queueable;
 use Anaseqal\NovaImport\Actions\Action;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -57,6 +58,10 @@ class ImportEarnings extends Action
             return Action::message('Import complete');
         } elseif ($fields->partners_cookie && $fields->import_type === 'api') {
             if ($this->auth($fields->account_id, $fields->partners_cookie)) {
+                // Save data to cache
+                Cache::add('shopify_partners_id', $fields->account_id, now()->addDays(7));
+                Cache::add('shopify_partners_cookie', $fields->partners_cookie, now()->addDays(1));
+
                 Artisan::queue('shopify:fetch_payments', [
                     'cookie'    => $fields->partners_cookie,
                     'id'        => $fields->account_id,
@@ -95,9 +100,13 @@ class ImportEarnings extends Action
             NovaDependencyContainer::make([
                 Number::make('Partners Account ID', 'account_id')
                     ->help('Copy it from your partners url. For eg. if you partners account url looks like https://partners.shopify.com/3223222/payments then 3223222 is the account ID')
+                    ->withMeta([
+                        'value' => Cache::get('shopify_partners_id', ''),
+                    ])
                       ->rules('required'),
                 Textarea::make('Shopify Partners Cookie', 'partners_cookie')
                         ->withMeta([
+                            'value'           => Cache::get('shopify_partners_cookie', ''),
                             'extraAttributes' => [
                                 'placeholder' => 'master_device_id=c489454c-cb09-4e94-9b9a-64e5da299bca;......................._gat__other=1',
                             ],
