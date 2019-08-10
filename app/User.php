@@ -35,6 +35,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'paypal_email',
         'user_type',
+        'commission',
+        'minimum_payout',
     ];
 
     /**
