@@ -59,6 +59,7 @@ class ImportEarnings extends Action
         } elseif ($fields->partners_cookie && $fields->import_type === 'api') {
             if ($this->auth($fields->account_id, $fields->partners_cookie)) {
                 // Save data to cache
+                Cache::add('shopify_partners_id', $fields->account_id, now()->addDays(7));
                 Cache::add('shopify_partners_cookie', $fields->partners_cookie, now()->addDays(1));
 
                 Artisan::queue('shopify:fetch_payments', [
