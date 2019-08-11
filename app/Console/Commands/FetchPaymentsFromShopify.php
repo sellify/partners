@@ -71,6 +71,8 @@ class FetchPaymentsFromShopify extends Command
 
         if ($this->accountId && $this->cookie) {
             if (!$this->auth()) {
+                Cache::forget('shopify_partners_id');
+                Cache::forget('shopify_partners_cookie');
                 $this->error('It seems like the cookie is not valid. Please get a new one. Exiting...');
 
                 return false;
