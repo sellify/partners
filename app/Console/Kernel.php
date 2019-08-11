@@ -44,8 +44,9 @@ class Kernel extends ConsoleKernel
         // Fetch payments from shopify
         if (Cache::get('shopify_partners_id') && Cache::get('shopify_partners_cookie')) {
             $schedule->command('shopify:fetch_payments', [
-                'id'     => Cache::get('shopify_partners_id', ''),
-                'cookie' => Cache::get('shopify_partners_cookie', ''),
+                'id'        => Cache::get('shopify_partners_id', ''),
+                'cookie'    => Cache::get('shopify_partners_cookie', ''),
+                '--pending' => true,
             ])->everyTenMinutes();
         }
     }
