@@ -35,8 +35,8 @@ I am using deployer to setup my server and then deploy the project. Contact me i
 My server is setup on [Vultr](https://www.vultr.com/?ref=7224448) which costs me just $5 per month :-)
 
 ## TODO
-[] Tests
-[] One click setup
+- [ ] Tests
+- [ ] One click setup
 
 
 ## Who am I?
