@@ -16,7 +16,7 @@ mkdir -p "${RELEASE_PATH}"
 mkdir -p $DEPLOY_PATH/storage
 mkdir -p $DEPLOY_PATH/storage/app/public
 mkdir -p $DEPLOY_PATH/storage/framework/cache
-mkdir -p $DEPLOY_PATH/storage/framework/session
+mkdir -p $DEPLOY_PATH/storage/framework/sessions
 mkdir -p $DEPLOY_PATH/storage/framework/views
 mkdir -p $DEPLOY_PATH/storage/logs
 
@@ -80,7 +80,7 @@ CRON="* * * * * www-data cd ${DEPLOY_PATH}/current && php artisan schedule:run >
 sudo test -f /etc/cron.d/${APP_NAME}|| echo "${CRON}" | sudo tee /etc/cron.d/${APP_NAME}
 
 echo -e "********* Generate SSL certificate *********"
-sudo certbot --nginx -d ${DOMAIN_NAME} --non-interactive --agree-tos -m ${EMAIL}
+sudo certbot certonly --nginx -d ${DOMAIN_NAME} --non-interactive --agree-tos -m ${EMAIL}
 
 echo -e "********* Nginx host *********"
 VHOST="$(sudo cat "${RELEASE_PATH}/host.conf")"
@@ -92,7 +92,8 @@ sudo test -f /etc/nginx/sites-available/${DOMAIN_NAME}.conf || echo "${VHOST}" |
 sudo test -f /etc/nginx/sites-enabled/${DOMAIN_NAME}.conf || sudo ln -s /etc/nginx/sites-available/${DOMAIN_NAME}.conf /etc/nginx/sites-enabled/${DOMAIN_NAME}.conf
 
 echo -e "********* Change owner *********"
-sudo chown -R www-data:www-data "${RELEASE_PATH}"
+sudo chown -R :www-data "${DEPLOY_PATH}"
+sudo chmod -R 775 ${DEPLOY_PATH}/storage
 
 echo -e "********* Restart queue *********"
 php artisan queue:restart
