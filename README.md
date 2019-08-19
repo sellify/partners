@@ -30,13 +30,17 @@ Setup an affiliate program for your apps. Our affiliate program is here: [https:
 
 
 ## Installation
-I am using deployer to setup my server and then deploy the project. Contact me if you need the script OR you can setup everything yourself. I'd recommend setting it up on a separate server. A basic server with 1 GB of RAM is enough and you can upgrade it later if you want.  
+I'd recommend setting it up on a separate server. A basic server with 1 GB of RAM is enough and you can upgrade it later if you want.  
 
 My server is setup on [Vultr](https://www.vultr.com/?ref=7224448) which costs me just $5 per month :-)
 
+
+
+### [Automatic Installation instructions](INSTALL.md)
+
 ## TODO
 - [ ] Tests
-- [ ] One click setup
+- [x] One click setup
 
 
 ## Who am I?

@@ -83,8 +83,8 @@
     },
     "repositories": [
         {
-            "type": "git",
-            "url": "git@github.com:niveshsaharan/laravel-nova.git"
+            "type": "composer",
+            "url": "https://nova.laravel.com"
         }
     ]
 }
