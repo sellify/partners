@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Nova\Lenses\UsersPayableCommissions;
+use App\Nova\Lenses\UsersPendingCommissions;
 use App\Nova\Metrics\Trend\CommissionsPerDay;
 use App\Nova\Metrics\Trend\ShopsPerDay;
 use App\Nova\Metrics\Trend\UsersPerDay;
@@ -247,6 +248,7 @@ class User extends Resource
     {
         return [
             new UsersPayableCommissions(),
+            new UsersPendingCommissions()
         ];
     }
 
