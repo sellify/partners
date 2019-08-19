@@ -86,6 +86,7 @@ echo -e "********* Nginx host *********"
 VHOST="$(sudo cat "${RELEASE_PATH}/host.conf")"
 VHOST="${VHOST//_APP_NAME_/$APP_NAME}"
 VHOST="${VHOST//_DOMAIN_NAME_/$DOMAIN_NAME}"
+VHOST="${VHOST//_DEPLOY_PATH_/$DEPLOY_PATH}"
 
 sudo test -f /etc/nginx/sites-available/${DOMAIN_NAME}.conf || echo "${VHOST}" | sudo tee /etc/nginx/sites-available/${DOMAIN_NAME}.conf
 sudo test -f /etc/nginx/sites-enabled/${DOMAIN_NAME}.conf || sudo ln -s /etc/nginx/sites-available/${DOMAIN_NAME}.conf /etc/nginx/sites-enabled/${DOMAIN_NAME}.conf
