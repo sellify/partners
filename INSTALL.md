@@ -10,7 +10,9 @@
 - Make changes in `variables.sh`
 - Copy `.env.example` from this repo's root as .env and make changes according to your environment
 - Execute `bash server.sh`. It will install all the packages/dependencies required for the project to run
+- You might need to press `Enter` to continue the script
 - If the above command executed successfully, execute `bash deploy.sh`
+- Composer Install may ask for `Laravel Nova Token`, Paste the token and press `Enter`. If you don't have token, get one here [https://nova.laravel.com/settings#password](https://nova.laravel.com/settings#password) or contact me.
 - If everything goes well, your project is deployed successfully.
 
 ## Need help

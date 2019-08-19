@@ -13,7 +13,7 @@ Setup an affiliate program for your apps. Our affiliate program is here: [https:
 - Nginx
 - Composer
 - Git
-- Yarn
+- [Laravel Nova Token](https://nova.laravel.com/settings#password)
 
 ## Main features:
 
@@ -33,8 +33,6 @@ Setup an affiliate program for your apps. Our affiliate program is here: [https:
 I'd recommend setting it up on a separate server. A basic server with 1 GB of RAM is enough and you can upgrade it later if you want.  
 
 My server is setup on [Vultr](https://www.vultr.com/?ref=7224448) which costs me just $5 per month :-)
-
-
 
 ### [Automatic Installation instructions](INSTALL.md)
 

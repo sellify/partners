@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6145e7d55aa2c823a342388ee44b20a2",
+    "content-hash": "cdf3ba6e6bb086aa21dc52bf3afa13f1",
     "packages": [
         {
             "name": "anaseqal/nova-import",
@@ -1722,16 +1722,22 @@
         },
         {
             "name": "laravel/nova",
-            "version": "v2.0.9",
+            "version": "v2.0.11",
             "source": {
                 "type": "git",
-                "url": "git@github.com:niveshsaharan/laravel-nova.git",
-                "reference": "5506bb538183c4109a83588dac280fe29280357a"
+                "url": "git@github.com:laravel/nova.git",
+                "reference": "055b382736bf2726754e8dcd674b4a0101ab6ac9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-055b382736bf2726754e8dcd674b4a0101ab6ac9-zip-bcb2d5.zip",
+                "reference": "055b382736bf2726754e8dcd674b4a0101ab6ac9",
+                "shasum": "a0dde4bca15de2b3f06aa62043728ce485283a4d"
             },
             "require": {
                 "cakephp/chronos": "^1.0",
                 "doctrine/dbal": "^2.9",
-                "illuminate/support": "^5.7.15 | 5.8.*",
+                "illuminate/support": "^5.7.15 | 5.8.* | ^6.0",
                 "moontoast/math": "^1.1",
                 "php": ">=7.1.0",
                 "spatie/once": "^1.1",
@@ -1782,7 +1788,7 @@
                 "admin",
                 "laravel"
             ],
-            "time": "2019-07-18T11:30:19+00:00"
+            "time": "2019-08-13T17:17:17+00:00"
         },
         {
             "name": "laravel/passport",
@@ -2820,16 +2826,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.23.0",
+            "version": "2.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "97a08830a22ce0b69549a4966773c0eae900468d"
+                "reference": "767617a047e5b8b8b3b0b6023a2650847ed7df02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/97a08830a22ce0b69549a4966773c0eae900468d",
-                "reference": "97a08830a22ce0b69549a4966773c0eae900468d",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/767617a047e5b8b8b3b0b6023a2650847ed7df02",
+                "reference": "767617a047e5b8b8b3b0b6023a2650847ed7df02",
                 "shasum": ""
             },
             "require": {
@@ -2883,7 +2889,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2019-08-12T17:19:41+00:00"
+            "time": "2019-08-17T13:57:34+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -3136,16 +3142,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.8.2",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "0c1346a1956347590b7db09533966307d20cb7cc"
+                "reference": "8dea03eaf60a349b6097e4bcad11f894668280df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/0c1346a1956347590b7db09533966307d20cb7cc",
-                "reference": "0c1346a1956347590b7db09533966307d20cb7cc",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/8dea03eaf60a349b6097e4bcad11f894668280df",
+                "reference": "8dea03eaf60a349b6097e4bcad11f894668280df",
                 "shasum": ""
             },
             "require": {
@@ -3164,17 +3170,16 @@
                 "ext-zlib": "*",
                 "markbaker/complex": "^1.4",
                 "markbaker/matrix": "^1.1",
-                "php": "^5.6|^7.0",
+                "php": "^7.1",
                 "psr/simple-cache": "^1.0"
             },
             "require-dev": {
-                "doctrine/instantiator": "^1.0.0",
                 "dompdf/dompdf": "^0.8.0",
                 "friendsofphp/php-cs-fixer": "@stable",
                 "jpgraph/jpgraph": "^4.0",
                 "mpdf/mpdf": "^7.0.0",
                 "phpcompatibility/php-compatibility": "^8.0",
-                "phpunit/phpunit": "^5.7",
+                "phpunit/phpunit": "^7.5",
                 "squizlabs/php_codesniffer": "^3.3",
                 "tecnickcom/tcpdf": "^6.2"
             },
@@ -3196,12 +3201,6 @@
             ],
             "authors": [
                 {
-                    "name": "Erik Tilt"
-                },
-                {
-                    "name": "Adrien Crivelli"
-                },
-                {
                     "name": "Maarten Balliauw",
                     "homepage": "https://blog.maartenballiauw.be"
                 },
@@ -3212,6 +3211,12 @@
                 {
                     "name": "Franck Lefevre",
                     "homepage": "https://rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                },
+                {
+                    "name": "Adrien Crivelli"
                 }
             ],
             "description": "PHPSpreadsheet - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
@@ -3226,7 +3231,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2019-07-08T21:21:25+00:00"
+            "time": "2019-08-17T22:24:35+00:00"
         },
         {
             "name": "phpoption/phpoption",
