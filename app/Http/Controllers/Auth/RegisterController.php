@@ -74,11 +74,11 @@ class RegisterController extends Controller
         ];
 
         if ((new User())->setting('user.commission')) {
-            $user['commission'] = (new User())->setting('user.commission');
+            $data['commission'] = (new User())->setting('user.commission');
         }
 
         if ((new User())->setting('user.minimum_payout')) {
-            $user['minimum_payout'] = (new User())->setting('user.minimum_payout');
+            $data['minimum_payout'] = (new User())->setting('user.minimum_payout');
         }
 
         $user = User::create($data);
