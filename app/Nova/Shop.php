@@ -117,7 +117,7 @@ class Shop extends Resource
             DateTime::make('Last Charge At')
                     ->format('MMM, DD YYYY hh:mm A')
                     ->sortable()
-                ->hideFromIndex()
+                    ->hideFromIndex()
                     ->hideWhenUpdating()
                     ->hideWhenCreating(),
 
@@ -125,7 +125,7 @@ class Shop extends Resource
                     ->format('MMM, DD YYYY hh:mm A')
                     ->hideWhenUpdating()
                     ->hideWhenCreating()
-            ->sortable(),
+                    ->sortable(),
 
             DateTime::make('Updated At')
                     ->format('MMM, DD YYYY hh:mm A')

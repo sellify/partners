@@ -14,4 +14,5 @@
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::apiResource('shops', 'ShopController');
+    Route::get('earnings', 'EarningController@find');
 });
