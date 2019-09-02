@@ -5,7 +5,6 @@ namespace App\Console;
 use App\Jobs\CheckPayPalPendingPayoutsStatus;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Cache;
 
 class Kernel extends ConsoleKernel
 {
@@ -39,16 +38,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
         // Fetch affiliates in last n days
-        $schedule->command('fetch:affiliates')->dailyAt('03:07');
-
-        // Fetch payments from shopify
-        if (Cache::get('shopify_partners_id') && Cache::get('shopify_partners_cookie')) {
-            $schedule->command('shopify:fetch_payments', [
-                'id'        => Cache::get('shopify_partners_id', ''),
-                'cookie'    => Cache::get('shopify_partners_cookie', ''),
-                '--pending' => true,
-            ])->everyTenMinutes();
-        }
+        $schedule->command('fetch:affiliates_and_shops')->dailyAt('03:07');
     }
 
     /**
