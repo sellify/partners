@@ -6,7 +6,9 @@ use Anaseqal\NovaImport\NovaImport;
 use App\Nova\App;
 use App\Nova\Metrics\Partition\ShopsPerApp;
 use App\Nova\Metrics\Trend\CommissionsPerDay;
+use App\Nova\Metrics\Trend\CommissionsPerMonth;
 use App\Nova\Metrics\Trend\EarningsPerDay;
+use App\Nova\Metrics\Trend\EarningsPerMonth;
 use App\Nova\Metrics\Trend\EarningsPerPayout;
 use App\Nova\Metrics\Trend\ShopsPerDay;
 use App\Nova\Metrics\Trend\UsersPerDay;
@@ -76,6 +78,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 return $request->user()->isAdmin();
             }),
             (new CommissionsPerDay())->width('1/2'),
+            (new EarningsPerMonth())->width('1/2')->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
+            (new CommissionsPerMonth())->width('1/2'),
             new NewCommissions(),
             (new ShopsPerDay())->width('1/2'),
             (new ShopsPerApp())->width('1/2'),
