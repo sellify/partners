@@ -107,6 +107,7 @@ class FetchPaymentsFromShopify extends Command
 
             // [Event]
             event(new EarningAdded());
+            Cache::add('clear_cache', true, now()->addMinutes(5));
 
             Log::info('Earnings import complete');
         }

@@ -35,8 +35,10 @@ trait CacheKey
      */
     public function cacheFor()
     {
-        $time = now()->addMinutes(5);
+        if (\Illuminate\Support\Facades\Cache::get('clear_cache') || config('app.env') !== 'production') {
+            return null;
+        }
 
-        return config('app.env') !== 'production' ? null : $time;
+        return now()->addMinutes(5);
     }
 }

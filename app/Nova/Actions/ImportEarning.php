@@ -59,7 +59,7 @@ class ImportEarnings extends Action
         } elseif ($fields->partners_cookie && $fields->import_type === 'api') {
             if ($this->auth($fields->account_id, $fields->partners_cookie)) {
                 // Save data to cache
-                Cache::add('shopify_partners_id', $fields->account_id, now()->addDays(7));
+                Cache::forever('shopify_partners_id', $fields->account_id);
                 Cache::add('shopify_partners_cookie', $fields->partners_cookie, now()->addDays(1));
 
                 Artisan::queue('shopify:fetch_payments', [
@@ -117,7 +117,9 @@ class ImportEarnings extends Action
                 Boolean::make('Import Pending Earnings', 'pending')->withMeta([
                     'value' => true,
                 ]),
-                Boolean::make('Import Previous Earnings', 'paid'),
+                Boolean::make('Import Previous Earnings', 'paid')->withMeta([
+                    'value' => false,
+                ]),
 
                 NovaDependencyContainer::make([
                 Number::make('Number of Previous Payouts to Fetch', 'limit')
