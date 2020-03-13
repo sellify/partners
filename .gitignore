@@ -13,3 +13,4 @@ yarn-error.log
 /nova-components
 .deployer
 !/*example*/**
+!deploy.php
