@@ -74,7 +74,8 @@ task('env', function () {
     $env = file_exists('.deployer/.env.' . get('stage') . '.env') ? file_get_contents('.deployer/.env.' . get('stage') . '.env') : '';
     if ($env) {
         file_put_contents('.env.' . get('stage') . '_compiled.conf', parse($env));
-        upload('.env.' . get('stage') . '_compiled.conf', '{{release_path}}/.env');
+        upload('.env.' . get('stage') . '_compiled.env', '{{release_path}}/.env');
+        unlink('.env.' . get('stage') . '_compiled.env');
         invoke('artisan:config:cache');
     } else {
         writeln('<error>Env not found</error>');

@@ -4,7 +4,7 @@ Setup an affiliate program for your apps. Our affiliate program is here: [https:
 
 ## Requirement
 - Ubuntu 18.04
-- Php 7.3
+- Php >=7.2
 - Mysql 5.7
 - Redis
 - Supervisor
