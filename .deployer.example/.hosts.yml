@@ -1,0 +1,18 @@
+server_ip_or_domain:
+  hostname: server_ip_or_domain
+  user: root
+  port: 22
+  stage: production
+  deploy_path: "/var/www/html/{{application}}"
+  configFile:
+  identityFile: ./.deployer/.ssh/id_rsa # Private key file location ~/.ssh/id_rsa
+  forwardAgent: true
+  multiplexing: true
+  sshOptions:
+    UserKnownHostsFile: /dev/null
+    StrictHostKeyChecking: no
+  roles:
+    - app
+    - db
+  branch: master
+  extra_param: ""
