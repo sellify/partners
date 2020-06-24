@@ -9,7 +9,9 @@ use App\Nova\Metrics\Trend\CommissionsPerDay;
 use App\Nova\Metrics\Trend\CommissionsPerMonth;
 use App\Nova\Metrics\Trend\EarningsPerDay;
 use App\Nova\Metrics\Trend\EarningsPerMonth;
+use App\Nova\Metrics\Trend\EarningsPerMonthToday;
 use App\Nova\Metrics\Trend\EarningsPerPayout;
+use App\Nova\Metrics\Trend\EarningsPerPayoutToday;
 use App\Nova\Metrics\Trend\ShopsPerDay;
 use App\Nova\Metrics\Trend\UsersPerDay;
 use App\Nova\Metrics\Value\NewCommissions;
@@ -71,23 +73,30 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function cards()
     {
         return [
+            (new UsersPerDay())->width('1/2')->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
             (new EarningsPerDay())->width('1/2')->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
+            (new EarningsPerPayoutToday())->width('1/2')->canSee(function ($request) {
                 return $request->user()->isAdmin();
             }),
             (new EarningsPerPayout())->width('1/2')->canSee(function ($request) {
                 return $request->user()->isAdmin();
             }),
-            (new CommissionsPerDay())->width('1/2'),
+            (new EarningsPerMonthToday())->width('1/2')->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
             (new EarningsPerMonth())->width('1/2')->canSee(function ($request) {
                 return $request->user()->isAdmin();
             }),
+            (new CommissionsPerDay())->width('1/2'),
             (new CommissionsPerMonth())->width('1/2'),
             new NewCommissions(),
             (new ShopsPerDay())->width('1/2'),
             (new ShopsPerApp())->width('1/2'),
-            (new UsersPerDay())->width('1/2')->canSee(function ($request) {
-                return $request->user()->isAdmin();
-            }),
+
             (new NewUsers())->canSee(function ($request) {
                 return $request->user()->isAdmin();
             }),

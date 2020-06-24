@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Metrics\Trend;
 use Laravel\Nova\Metrics\TrendResult;
 
-class EarningsPerMonth extends Trend
+class EarningsPerPayoutToday extends Trend
 {
     use CacheKey;
 
     protected $resourceColumn = 'app_id';
+    protected $rangeDate = null;
 
     /**
      * Set resource column
@@ -38,22 +39,26 @@ class EarningsPerMonth extends Trend
      */
     public function calculate(Request $request)
     {
-        //
-        $earnings = Earning::when($request->get('range') > 0, function ($query) use ($request) {
-            return $query->where('payout_date', '>=', Carbon::now()->subMonths($request->get('range')));
+        $range = $request->get('range');
+        $this->rangeDate = Carbon::now()->subMonths($range)->startOfMonth();
+        $earnings = Earning::when($range > 0, function ($query) use ($request, $range) {
+            return $query->where('charge_created_at', '>=', $this->rangeDate);
         })
-                            ->when($request->resourceId > 0, function ($query) use ($request) {
-                                return $query->where($this->resourceColumn, $request->resourceId);
-                            })
-                            ->groupBy(DB::raw("DATE_FORMAT(charge_created_at, '%Y-%m')"))
-                            ->select(\DB::raw('sum(amount) as amount'), 'charge_created_at')
-                            ->orderBy('charge_created_at', 'asc')
-                            ->get();
+            ->when($request->resourceId > 0, function ($query) use ($request) {
+                return $query->where($this->resourceColumn, $request->resourceId);
+            })
+            ->where(DB::raw("DATE_FORMAT(charge_created_at, '%d')"), '<=', Carbon::today()->day)
+            ->where(DB::raw("DATE_FORMAT(charge_created_at, '%d')"), '>=', Carbon::today()->day > 15 ? 16 : 1)
+            ->where(DB::raw("DATE_FORMAT(charge_created_at, '%d')"), '<=', Carbon::today()->day < 16 ? 15 : 31)
+            ->groupBy(DB::raw("DATE_FORMAT(charge_created_at, '%Y-%m')"))
+            ->select(\DB::raw('sum(amount) as amount'), 'charge_created_at')
+            ->orderBy('charge_created_at', 'asc')
+            ->get();
 
         $trend = [];
 
         foreach ($earnings as $earning) {
-            $trend[$earning->charge_created_at->format('M, Y')] = $earning->amount / 100;
+            $trend[(Carbon::today()->day > 15 ? 16 : 1) . ' ' . $earning->charge_created_at->format('M') . '-' . Carbon::today()->day . ' ' . $earning->charge_created_at->format('M, Y')] = $earning->amount / 100;
         }
 
         return (new TrendResult())->dollars()->trend($trend)->showLatestValue();
@@ -83,6 +88,19 @@ class EarningsPerMonth extends Trend
      */
     public function uriKey()
     {
-        return 'earnings-per-month';
+        return 'earnings-per-payout-today';
+    }
+
+    /**
+     * @return string
+     */
+    public function name(): string
+    {
+        $day = $this->rangeDate ? $this->rangeDate->format('d') : Carbon::today()->format('d');
+        $locale = 'en_US';
+        $nf = new \NumberFormatter($locale, \NumberFormatter::ORDINAL);
+        $day = $nf->format($day);
+
+        return 'Earnings Per Payout till ' . $day;
     }
 }

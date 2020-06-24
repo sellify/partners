@@ -74,7 +74,7 @@ class CommissionsPerMonth extends Trend
             6     => '6 Months',
             1     => '1 Month',
             2     => '2 Months',
-            3     => '90 Months',
+            3     => '3 Months',
             12    => '12 Months',
             Carbon::createFromDate(1971, 1, 1)->diffInMonths(Carbon::now())    => 'All Time',
         ];

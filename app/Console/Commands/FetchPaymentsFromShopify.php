@@ -19,7 +19,7 @@ class FetchPaymentsFromShopify extends Command
      * @var string
      */
     protected $signature = 'shopify:fetch_payments
-                            {id : Your Shopify Partners ID} 
+                            {id : Your Shopify Partners ID}
                             {cookie : Shopify Partners cookie from one of your logged in account having permissions to financial. }
                             {limit=0 : Maximum payouts to fetch}
                             {--paid : Fetch paid earnings}

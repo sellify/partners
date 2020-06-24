@@ -52,8 +52,8 @@ class ImportEarnings extends Action
      */
     public function handle(ActionFields $fields)
     {
-        if ($fields->file && $fields->import_type === 'csv') {
-            Excel::import(new EarningsImporter(), $fields->csv_file);
+        if ($fields->csv_file && $fields->import_type === 'csv') {
+            Excel::import(new EarningsImporter(), $fields->csv_file, 'public');
 
             return Action::message('Import complete');
         } elseif ($fields->partners_cookie && $fields->import_type === 'api') {

@@ -4,6 +4,8 @@ namespace App\Nova;
 
 use App\Nova\Actions\ImportEarnings;
 use App\Nova\Metrics\Trend\EarningsPerDay;
+use App\Nova\Metrics\Trend\EarningsPerMonth;
+use App\Nova\Metrics\Trend\EarningsPerMonthToday;
 use App\Nova\Metrics\Trend\EarningsPerPayout;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -166,6 +168,12 @@ class Earning extends Resource
             (new EarningsPerPayout())->canSee(function ($request) {
                 return $request->user()->isAdmin();
             })->width('1/2'),
+            (new EarningsPerMonthToday())->width('1/2')->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
+            (new EarningsPerMonth())->width('1/2')->canSee(function ($request) {
+                return $request->user()->isAdmin();
+            }),
         ];
     }
 
