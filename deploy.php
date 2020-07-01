@@ -4,8 +4,8 @@ namespace Deployer;
 
 use Deployer\Task\Context;
 
-require '/var/www/html/deployer/deployer/recipe/laravel.php';
-require '/var/www/html/deployer/recipes/recipe/slack.php';
+require 'recipe/laravel.php';
+#require '/var/www/html/deployer/recipes/recipe/slack.php';
 
 require './.deployer/config.php';
 
@@ -304,7 +304,7 @@ task('server:provision', [
 task('deploy', [
     'info',
     'deploy:info',
-    'check:provision',
+  //  'check:provision',
     'deploy:prepare',
     'deploy:lock',
     'deploy:release',

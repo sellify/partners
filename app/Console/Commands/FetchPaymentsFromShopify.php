@@ -188,6 +188,12 @@ class FetchPaymentsFromShopify extends Command
 
             $data['amount'] = ($earning->total_price ?? 0) * 100;
 
+            if(!$payment)
+            {
+                // Pending earnings amount is with Shopify's commission
+                $data['amount'] = $data['amount'] * 0.8;
+            }
+
             $data['shop_id'] = $shop->id;
 
             // Create or update

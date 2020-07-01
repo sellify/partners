@@ -43,8 +43,12 @@ class Earning extends Model
             'charge_created_at' => $data['charge_created_at'],
             'charge_type'       => $data['charge_type'],
             'payout_date'       => $data['payout_date'],
-            'amount'            => $data['amount'],
         ];
+
+        if(!$data['shopify_earning_id'])
+        {
+            $conditions['amount'] = $data['amount'];
+        }
 
         // Find if already exists
         $earning = self::where($conditions)
