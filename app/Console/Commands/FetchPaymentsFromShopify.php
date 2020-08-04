@@ -170,9 +170,9 @@ class FetchPaymentsFromShopify extends Command
                 'charge_created_at' => Carbon::parse($earning->created_at)->setTimezone('UTC'),
                 'charge_type'       => $charge_type,
                 'category'          => Str::contains($charge_type, 'Theme') ? 'Theme revenue' : (
-                Str::contains($charge_type, 'Application') ? 'App revenue' : (
-                Str::contains($charge_type, 'Affiliate') ? 'Affiliate fee' : 'Other'
-                )
+                    Str::contains($charge_type, 'Application') ? 'App revenue' : (
+                        Str::contains($charge_type, 'Affiliate') ? 'Affiliate fee' : 'Other'
+                    )
                 ),
                 'theme_name'         => Str::contains($charge_type, 'Theme') ? $earning->api_client_title : null,
                 'shopify_earning_id' => $earning->id,
@@ -187,12 +187,7 @@ class FetchPaymentsFromShopify extends Command
             $data['payout_date'] = $earning->release_at ? Carbon::parse($earning->release_at) : null;
 
             $data['amount'] = ($earning->total_price ?? 0) * 100;
-
-            if(!$payment)
-            {
-                // Pending earnings amount is with Shopify's commission
-                $data['amount'] = $data['amount'] * 0.8;
-            }
+            $data['amount'] = $data['amount'] * 0.8;
 
             $data['shop_id'] = $shop->id;
 
