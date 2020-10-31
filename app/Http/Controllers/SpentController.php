@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Earning;
 use Illuminate\Http\Request;
 
-class SpentController extends Controller
+class SpendingController extends Controller
 {
     public function find(Request $request)
     {
