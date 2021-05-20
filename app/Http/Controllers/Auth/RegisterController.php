@@ -65,7 +65,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return redirect(route('register'));
+        die("Registrations are suspended");
 
         $data = [
             'name'         => $data['name'],
