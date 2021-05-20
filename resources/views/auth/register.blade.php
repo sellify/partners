@@ -15,6 +15,10 @@
             {{ __('Create an account') }}
         @endcomponent
 
+        <p class="text-center font-semibold text-danger my-3">
+            New registration are suspended.
+        </p>
+
         @if ($errors->any())
             @foreach ($errors->all() as $error)
             <p class="text-center font-semibold text-danger my-3">
